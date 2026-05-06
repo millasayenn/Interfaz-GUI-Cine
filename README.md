@@ -5,11 +5,11 @@ Este proyecto es una aplicación de escritorio desarrollada en Python enfocada e
 El diseño del sistema está estructurado utilizando la arquitectura **MVC (Modelo-Vista-Controlador)** y aplica estrictamente los principios **S.O.L.I.D.**, asegurando un código altamente cohesionado, con bajo acoplamiento y fácil de mantener.
 
 ## Próximas funciones a implementar:
-* Modificación y eliminación de perfiles
-* Perfil de administrador
-    * Crear, modificar y eliminar películas
-    * Crear, modificar y eliminar funciones
-* Agregar más validaciones e inserar modulo 11 para RUT
+* Modificación y eliminación de perfiles de usuario.
+* Perfil de administrador.
+    * Crear, modificar y eliminar películas.
+    * Crear, modificar y eliminar funciones.
+* Agregar más validaciones e inserar modulo 11 para RUT.
 
 ## Arquitectura y Diseño (UML)
 
