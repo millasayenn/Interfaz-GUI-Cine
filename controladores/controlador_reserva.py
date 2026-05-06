@@ -17,7 +17,6 @@ class ControladorReserva:
         self.procesadorPago = ProcesadorPago()
         self.notificador = NotificadorEmail()
 
-        
         # 3. Estado actual del sistema
         self.funcionActual: Funcion = None
         
@@ -104,9 +103,90 @@ class ControladorReserva:
         except ValueError as e:
             # Atrapamos los errores de tu fábrica (ej. si el tipo de pago no existe)
             self.vista.mostrarMensaje(str(e))
-            return False
+            return False 
+
+    def registrar_reserva(self, datos_reserva):
+        """
+        Guarda la reserva en reservas.json y bloquea los asientos en peliculas.json
+        """
+        # 1. Guardar el recibo en reservas.json
+        lista_reservas = GestorJSON.leer_datos(self.ruta_reservas) 
+        lista_reservas.append(datos_reserva)
+        GestorJSON.guardar_datos(self.ruta_reservas, lista_reservas) 
+
+        # 2. Bloquear los asientos en peliculas.json (Para que se marquen en ROJO)
+        peliculas = GestorJSON.leer_datos(self.ruta_peliculas) 
+
+        titulo_buscado = datos_reserva.get("pelicula_titulo")
+        fecha_buscada = datos_reserva.get("fecha")
+        hora_buscada = datos_reserva.get("hora")
+        nuevos_asientos = datos_reserva.get("asientos", [])
+
+        # Navegamos por el JSON para encontrar la película, fecha y hora exacta
+        for pelicula in peliculas:
+            if pelicula.get("titulo") == titulo_buscado:
+                for funcion in pelicula.get("funciones", []):
+                    if funcion.get("fecha") == fecha_buscada:
+                        for horario in funcion.get("horarios", []):
+                            if horario.get("hora") == hora_buscada:
+                                
+                                # Obtenemos la lista actual de ocupados y le sumamos los nuevos
+                                ocupados_actuales = horario.get("asientos_ocupados", [])
+                                ocupados_actuales.extend(nuevos_asientos)
+                                
+                                # Evitamos duplicados por seguridad
+                                horario["asientos_ocupados"] = list(set(ocupados_actuales))
+                                break
+
+        # 3. Guardamos los cambios en el disco duro (JSON)
+        GestorJSON.guardar_datos(self.ruta_peliculas, peliculas) 
+
+        # 4. === LA SOLUCIÓN: SINCRONIZAR LA MEMORIA RAM ===
+        # Actualizamos la lista de películas del controlador para que la cartelera muestre lo nuevo
+        self.lista_peliculas = peliculas
+
+
+    def devolver_reserva(self, reserva_a_eliminar):
+        """
+        Elimina la reserva y libera los asientos en la película correspondiente.
+        """
+        # 1. Eliminar de reservas.json
+        lista_reservas = GestorJSON.leer_datos(self.ruta_reservas) 
         
+        # Filtramos para dejar todas las reservas MENOS la que queremos eliminar
+        lista_reservas = [r for r in lista_reservas if r != reserva_a_eliminar]
+        GestorJSON.guardar_datos(self.ruta_reservas, lista_reservas) 
+
+        # 2. Actualizar el stock en peliculas.json
+        peliculas = GestorJSON.leer_datos(self.ruta_peliculas) 
         
+        titulo_buscado = reserva_a_eliminar.get("pelicula_titulo")
+        fecha_buscada = reserva_a_eliminar.get("fecha")
+        hora_buscada = reserva_a_eliminar.get("hora")
+        asientos_liberados = reserva_a_eliminar.get("asientos", [])
+
+        # Navegamos por el JSON para encontrar la hora exacta
+        for pelicula in peliculas:
+            if pelicula.get("titulo") == titulo_buscado:
+                for funcion in pelicula.get("funciones", []):
+                    if funcion.get("fecha") == fecha_buscada:
+                        for horario in funcion.get("horarios", []):
+                            if horario.get("hora") == hora_buscada:
+                                
+                                # Quitamos los asientos de la lista de "asientos_ocupados"
+                                ocupados_actuales = horario.get("asientos_ocupados", [])
+                                nuevos_ocupados = [a for a in ocupados_actuales if a not in asientos_liberados]
+                                horario["asientos_ocupados"] = nuevos_ocupados
+                                break
+
+        # 3. Guardamos los cambios en el disco duro (JSON)
+        GestorJSON.guardar_datos(self.ruta_peliculas, peliculas) 
+        
+        # 4. === LA SOLUCIÓN: SINCRONIZAR LA MEMORIA RAM ===
+        self.lista_peliculas = peliculas
+
+        # 5. Refrescar la vista actual de Mis Reservas
+        self.vista.vista_mis_reservas.cargar_mis_reservas(lista_reservas)
         
     def cancelarReserva(self, id_reserva: int):
         """Busca una reserva, la cancela y libera sus asientos."""

@@ -1,22 +1,12 @@
 [
     {
-        "nombre": "as",
-        "correo": "as",
-        "password": "as"
-    },
-    {
-        "nombre": "as",
+        "nombre": "holaM",
         "correo": "as@gmail.com",
-        "password": "as"
+        "password": "12345678"
     },
     {
-        "nombre": "as  %",
-        "correo": "as@gmaill.com",
-        "password": "asasasas"
-    },
-    {
-        "nombre": "ashola",
-        "correo": "as1@gmail.com",
+        "nombre": "MundocJ",
+        "correo": "hola@gmail.com",
         "password": "12345678"
     }
 ]

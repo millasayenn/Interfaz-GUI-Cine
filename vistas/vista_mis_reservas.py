@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinter import messagebox
 
 class VistaMisReservas(ctk.CTkFrame):
     def __init__(self, master, controlador, **kwargs):
@@ -6,31 +7,48 @@ class VistaMisReservas(ctk.CTkFrame):
         self.controlador = controlador
         self.pack_forget()
 
-        self.label_titulo = ctk.CTkLabel(self, text="Mis Películas Reservadas", font=("Arial", 24, "bold"))
-        self.label_titulo.pack(pady=20)
+        ctk.CTkLabel(self, text="Mis Reservas", font=("Arial", 24, "bold")).pack(pady=15)
 
-        self.contenedor_reservas = ctk.CTkScrollableFrame(self, width=600, height=400)
-        self.contenedor_reservas.pack(pady=10, padx=20, fill="both", expand=True)
+        # Contenedor con scroll para ver todas las reservas
+        self.scroll_frame = ctk.CTkScrollableFrame(self, width=550, height=350)
+        self.scroll_frame.pack(pady=10, padx=20, fill="both", expand=True)
 
-        self.btn_volver = ctk.CTkButton(self, text="Volver a Cartelera", command=self.controlador.mostrar_cartelera)
-        self.btn_volver.pack(pady=20)
+        self.btn_volver = ctk.CTkButton(self, text="Volver a Cartelera", fg_color="gray", 
+                                        command=lambda: self.controlador.mostrar_cartelera())
+        self.btn_volver.pack(pady=15)
 
-    def cargar_mis_reservas(self, reservas_usuario):
-        """Renderiza las reservas que el controlador le pasa por parámetro"""
-        for widget in self.contenedor_reservas.winfo_children():
+    def cargar_mis_reservas(self, reservas):
+        """Limpia la pantalla y dibuja las reservas actuales"""
+        for widget in self.scroll_frame.winfo_children():
             widget.destroy()
 
-        if not reservas_usuario:
-            ctk.CTkLabel(self.contenedor_reservas, text="Aún no tienes reservas.", font=("Arial", 16)).pack(pady=20)
+        if not reservas:
+            ctk.CTkLabel(self.scroll_frame, text="No tienes reservas actualmente.", font=("Arial", 14)).pack(pady=20)
             return
 
-        for reserva in reservas_usuario:
-            frame_reserva = ctk.CTkFrame(self.contenedor_reservas, corner_radius=10)
-            frame_reserva.pack(pady=10, padx=10, fill="x")
+        for reserva in reservas:
+            # Tarjeta de cada reserva
+            frame_reserva = ctk.CTkFrame(self.scroll_frame, fg_color="#2b2b2b")
+            frame_reserva.pack(pady=5, padx=5, fill="x")
 
-            lbl_titulo = ctk.CTkLabel(frame_reserva, text=f"Película: {reserva['pelicula_titulo']}", font=("Arial", 16, "bold"))
-            lbl_titulo.pack(anchor="w", padx=15, pady=(10, 2))
+            detalles = (
+                f"🎬 {reserva.get('pelicula_titulo')}\n"
+                f"📅 {reserva.get('fecha')} | ⏰ {reserva.get('hora')}\n"
+                f"💺 Asientos: {', '.join(reserva.get('asientos', []))}"
+            )
 
-            asientos_str = ", ".join(reserva['asientos'])
-            lbl_detalles = ctk.CTkLabel(frame_reserva, text=f"Asientos: {asientos_str} | Pagado con: {reserva['metodo_pago']}")
-            lbl_detalles.pack(anchor="w", padx=15, pady=(2, 10))
+            lbl_info = ctk.CTkLabel(frame_reserva, text=detalles, justify="left", font=("Arial", 12))
+            lbl_info.pack(side="left", padx=10, pady=10)
+
+            # Botón de devolución
+            btn_devolver = ctk.CTkButton(frame_reserva, text="Devolver", fg_color="red", hover_color="darkred", width=80,
+                                         command=lambda r=reserva: self.solicitar_devolucion(r))
+            btn_devolver.pack(side="right", padx=10)
+
+    def solicitar_devolucion(self, reserva):
+        respuesta = messagebox.askyesno("Confirmar Devolución", 
+                                        f"¿Deseas anular la reserva y liberar los asientos de '{reserva.get('pelicula_titulo')}'?")
+        if respuesta:
+            # Llama al controlador para hacer la magia de los JSON
+            self.controlador.devolver_reserva(reserva)
+            messagebox.showinfo("Éxito", "Asientos devueltos. El stock ha sido actualizado.")

@@ -1,7 +1,9 @@
 from .i_metodo_pago import IMetodoPago
 
 class PagoEfectivo(IMetodoPago):
-    def procesarCobro(self, monto:float) -> bool:
-        print (f"Cajero recibe efectivo. Cobro de ${monto} exitoso")
-        return True
+    def procesar_pago(self, monto: float) -> bool:
+        # Lógica de tu pago en efectivo
+        print(f"Procesando pago en efectivo por el monto de: ${monto}")
         
+        # Aquí puedes agregar validaciones. Por ahora retornamos True simulando éxito.
+        return True

@@ -1,26 +1,65 @@
 [
     {
         "id": 1,
-        "titulo": "Avengers: Endgame",
-        "duracion": "181 min",
-        "clasificacion": "+14"
+        "titulo": "Spider-Man: No Way Home",
+        "duracion": "148 min",
+        "funciones": [
+            {
+                "fecha": "10-05-2026",
+                "horarios": [
+                    {
+                        "hora": "15:00",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "18:30",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "21:00",
+                        "asientos_ocupados": []
+                    }
+                ]
+            },
+            {
+                "fecha": "11-05-2026",
+                "horarios": [
+                    {
+                        "hora": "14:00",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "17:30",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "20:00",
+                        "asientos_ocupados": []
+                    }
+                ]
+            }
+        ],
+        "asientos_ocupados": [
+        ]
     },
     {
         "id": 2,
-        "titulo": "Duna: Parte 2",
+        "titulo": "Dune: Parte Dos",
         "duracion": "166 min",
-        "clasificacion": "TE"
-    },
-    {
-        "id": 3,
-        "titulo": "Oppenheimer",
-        "clasificacion": "+16",
-        "duracion": "180 min"
-    },
-    {
-        "id": 4,
-        "titulo": "Spider-Man: Across the Spider-Verse",
-        "clasificacion": "+13",
-        "duracion": "140 min"
+        "funciones": [
+            {
+                "fecha": "10-05-2026",
+                "horarios": [
+                    {
+                        "hora": "16:00",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "20:00",
+                        "asientos_ocupados": []
+                    }
+                ]
+            }
+        ]
     }
 ]
