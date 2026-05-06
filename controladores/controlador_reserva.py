@@ -13,14 +13,14 @@ class ControladorReserva:
         # 1. Guardamos la interfaz gráfica
         self.vista = vista
         
-        # 2. Inicializamos tus servicios
+        # 2. Inicializamos los servicios
         self.procesadorPago = ProcesadorPago()
         self.notificador = NotificadorEmail()
 
         # 3. Estado actual del sistema
         self.funcionActual: Funcion = None
         
-        # 4. Un diccionario para guardar las reservas creadas (Simulando una base de datos)
+        # 4. Un diccionario para guardar las reservas creadas
         self.reservas_creadas = {}
         self.contador_id = 1
 
@@ -50,8 +50,6 @@ class ControladorReserva:
         monto_total = len(asientos_seleccionados) * 5000.0
         
         try:
-            # === 1. TU CÓDIGO EN ACCIÓN (S.O.L.I.D.) ===
-            # Pedimos a tu fábrica el método de pago correcto
             metodo = FabricaPago.crearMetodoPago(tipo_pago)
             self.procesadorPago.setMetodoPago(metodo)
             
@@ -91,17 +89,13 @@ class ControladorReserva:
                 self.reservas_creadas[self.contador_id] = nueva_reserva
                 self.contador_id += 1
                 
-                # === 3. NOTIFICAMOS AL USUARIO ===
-                # Ahora sí funcionará porque "nueva_reserva" existe
                 comprobante = nueva_reserva.generarComprobante()
                 self.notificador.enviar(cliente.email, comprobante)
                 
-                # === 4. ACTUALIZAMOS LA VISTA ===
                 self.vista.mostrarMensaje("¡Reserva y pago completados con éxito!")
                 return True
                 
         except ValueError as e:
-            # Atrapamos los errores de tu fábrica (ej. si el tipo de pago no existe)
             self.vista.mostrarMensaje(str(e))
             return False 
 
@@ -141,8 +135,7 @@ class ControladorReserva:
         # 3. Guardamos los cambios en el disco duro (JSON)
         GestorJSON.guardar_datos(self.ruta_peliculas, peliculas) 
 
-        # 4. === LA SOLUCIÓN: SINCRONIZAR LA MEMORIA RAM ===
-        # Actualizamos la lista de películas del controlador para que la cartelera muestre lo nuevo
+        # 4. Actualizamos la lista de películas del controlador
         self.lista_peliculas = peliculas
 
 
@@ -181,11 +174,9 @@ class ControladorReserva:
 
         # 3. Guardamos los cambios en el disco duro (JSON)
         GestorJSON.guardar_datos(self.ruta_peliculas, peliculas) 
-        
-        # 4. === LA SOLUCIÓN: SINCRONIZAR LA MEMORIA RAM ===
         self.lista_peliculas = peliculas
 
-        # 5. Refrescar la vista actual de Mis Reservas
+        # 4. Refrescar la vista actual de Mis Reservas
         self.vista.vista_mis_reservas.cargar_mis_reservas(lista_reservas)
         
     def cancelarReserva(self, id_reserva: int):
@@ -204,6 +195,4 @@ class ControladorReserva:
 
     def modificarAsientoReserva(self, id_reserva: int, asiento_viejo: str, asiento_nuevo: str):
         """Cambia un asiento por otro si el nuevo está disponible."""
-        # Aquí iría la lógica para buscar la reserva, verificar si el 'asiento_nuevo'
-        # está libre en la funcionActual, marcarlo ocupado y liberar el 'asiento_viejo'.
         self.vista.mostrarMensaje(f"Asiento actualizado a {asiento_nuevo}.")
