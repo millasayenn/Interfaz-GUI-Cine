@@ -11,9 +11,6 @@ Para resolver la instanciación de los métodos de pago sin acoplar el controlad
 A continuación se detalla el diagrama de clases del sistema, que incluye el flujo completo (CRUD) de las reservas:
 ```mermaid
 classDiagram
-    %% ==========================================
-    %% CAPA DE VISTAS (INTERFAZ DE USUARIO)
-    %% ==========================================
     class VistaLogin {
         +intentar_login()
         +intentar_registro()
@@ -34,9 +31,6 @@ classDiagram
         +solicitar_devolucion(reserva: Dict)
     }
 
-    %% ==========================================
-    %% CONTROLADOR PRINCIPAL Y ORQUESTADOR
-    %% ==========================================
     class AppCine {
         -usuario_actual: Dict
         +mostrar_login()
@@ -49,9 +43,6 @@ classDiagram
         +devolver_reserva(reserva_a_eliminar: Dict)
     }
 
-    %% ==========================================
-    %% SERVICIOS Y PATRONES (CAPA S.O.L.I.D.)
-    %% ==========================================
     class IMetodoPago {
         <<interface>>
         +procesar_pago(monto: Float) Boolean
@@ -71,9 +62,6 @@ classDiagram
         +procesar_pago(monto: Float) Boolean
     }
 
-    %% ==========================================
-    %% RELACIONES Y DEPENDENCIAS
-    %% ==========================================
     AppCine *-- VistaLogin : Instancia y controla
     AppCine *-- VistaCartelera : Instancia y controla
     AppCine *-- VistaReserva : Instancia y controla

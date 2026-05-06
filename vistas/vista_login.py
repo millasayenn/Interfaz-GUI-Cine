@@ -39,15 +39,13 @@ class VistaLogin(ctk.CTkFrame):
         self.btn_registrar = ctk.CTkButton(self.tabview.tab("Registrarse"), text="Crear Cuenta", fg_color="green", hover_color="darkgreen", command=self.intentar_registro)
         self.btn_registrar.pack(pady=20)
 
-    # NUEVO: Método para validar el formato del correo
+    # Método para validar el formato del correo
     def validar_correo(self, correo):
         import re
         patron = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         return bool(re.match(patron, correo))
 
     def intentar_login(self):
-        # NOTA: NO usamos .strip() en la contraseña para poder detectar si alguien
-        # intenta iniciar sesión poniendo puros espacios por error.
         correo = self.entry_login_correo.get()
         password = self.entry_login_pass.get()
         

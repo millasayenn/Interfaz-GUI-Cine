@@ -10,14 +10,11 @@
                 "horarios": [
                     {
                         "hora": "15:00",
-                        "asientos_ocupados": [
-                        ]
+                        "asientos_ocupados": []
                     },
                     {
                         "hora": "18:30",
-                        "asientos_ocupados": [
-
-                        ]
+                        "asientos_ocupados": []
                     },
                     {
                         "hora": "21:00",
@@ -43,8 +40,7 @@
                 ]
             }
         ],
-        "asientos_ocupados": [
-]
+        "asientos_ocupados": []
     },
     {
         "id": 2,

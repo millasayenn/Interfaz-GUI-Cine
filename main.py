@@ -34,7 +34,7 @@ class AppCine(ctk.CTk):
         self.vista_reserva.pack_forget()
         self.vista_mis_reservas.pack_forget()
 
-    # --- RUTAS / NAVEGACIÓN ---
+    # Rutas/navegacion
     def mostrar_login(self):
         self.ocultar_todo()
         self.vista_login.pack(fill="both", expand=True)
@@ -68,7 +68,7 @@ class AppCine(ctk.CTk):
         self.vista_mis_reservas.cargar_mis_reservas(reservas_usuario)
         self.vista_mis_reservas.pack(fill="both", expand=True)
 
-    # --- LÓGICA DE SESIÓN ---
+    # Lógica de inicio de sesión
     def procesar_registro(self, nombre, correo, password):
         ruta = os.path.join("datos", "clientes.json")
         with open(ruta, "r", encoding="utf-8") as f:
@@ -103,7 +103,7 @@ class AppCine(ctk.CTk):
         self.usuario_actual = None
         self.mostrar_login()
 
-    # --- LÓGICA DE RESERVA ---
+    # Logica de reserva
     def registrar_reserva(self, datos_reserva):
         # Los datos se asignan automáticamente usando la sesión actual
         datos_reserva["cliente_correo"] = self.usuario_actual["correo"]
@@ -124,7 +124,7 @@ class AppCine(ctk.CTk):
         with open(ruta_reservas, "w", encoding="utf-8") as f:
             json.dump(reservas, f, indent=4)
 
-        # 2. Actualizar peliculas.json (CORREGIDO LA ANIDACIÓN)
+        # 2. Actualizar peliculas.json
         ruta_peliculas = os.path.join("datos", "peliculas.json")
         peliculas = []
         if os.path.exists(ruta_peliculas):
@@ -134,7 +134,7 @@ class AppCine(ctk.CTk):
                 except json.JSONDecodeError:
                     peliculas = []
 
-        # Navegamos hasta el horario exacto para ocupar el asiento
+        # Navegación hasta el horario exacto para ocupar el asiento
         for peli in peliculas:
             if peli.get("titulo") == datos_reserva["pelicula_titulo"]:
                 for funcion in peli.get("funciones", []):
@@ -192,7 +192,7 @@ class AppCine(ctk.CTk):
         # 3. Refrescar la vista actual para que la tarjeta desaparezca
         self.mostrar_mis_reservas()
         
-    # --- UTILIDAD ---
+    # Utilidad
     def crear_archivos_base(self):
         """Asegura que los archivos JSON existan para evitar errores de lectura"""
         if not os.path.exists("datos"): os.makedirs("datos")
