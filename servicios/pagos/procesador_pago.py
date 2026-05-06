@@ -5,14 +5,12 @@ No le importa si es tarjeta o efectivo, solo sabe que lo que sea que tiene guard
 tiene un metodo llamado procesarCobro()"""
 
 class ProcesadorPago:
-    def __init__(self):
-        self.estrategiaPago: IMetodoPago = None
+    def __init__(self, metodo_pago):
+        # Recibe la clase de pago (Tarjeta o Efectivo) y la guarda
+        self.metodo_pago = metodo_pago
 
-    def setMetodoPago(self, metodo: IMetodoPago):
-        #Asigna el método de pago que utilizará"
-        self.estrategiaPago = metodo
-    def ejecutarPago(self, monto: float) -> bool:
-        #Ejecuta el cobro usando la estrategia asignada
-        if self.estrategiaPago is None:
-            raise Exception ("No se ha definido un método de pago antes de cobrar")
-        return self.estrategiaPago.procesarCobro(monto)
+    def procesar_pago(self, monto):
+        # Llama a la función de pago correspondiente. 
+        # (Nota: Asegúrate de que tus archivos pago_tarjeta.py y pago_efectivo.py 
+        # tengan una función llamada 'procesar_pago' o cambia este nombre según corresponda).
+        return self.metodo_pago.procesar_pago(monto)

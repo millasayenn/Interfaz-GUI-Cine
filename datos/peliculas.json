@@ -2,13 +2,25 @@
     {
         "id": 1,
         "titulo": "Avengers: Endgame",
-        "duracionMinutos": 181,
+        "duracion": "181 min",
         "clasificacion": "+14"
     },
     {
         "id": 2,
         "titulo": "Duna: Parte 2",
-        "duracionMinutos": 166,
+        "duracion": "166 min",
         "clasificacion": "TE"
+    },
+    {
+        "id": 3,
+        "titulo": "Oppenheimer",
+        "clasificacion": "+16",
+        "duracion": "180 min"
+    },
+    {
+        "id": 4,
+        "titulo": "Spider-Man: Across the Spider-Verse",
+        "clasificacion": "+13",
+        "duracion": "140 min"
     }
 ]
