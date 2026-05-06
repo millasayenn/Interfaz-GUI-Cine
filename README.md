@@ -75,3 +75,10 @@ classDiagram
     ProcesadorPago o-- IMetodoPago : Depende de (Composición)
     FabricaPago ..> IMetodoPago : Crea
     ```
+
+## Próximas funciones a implementar:
+* [ ] Modificación y eliminación de perfiles
+* [ ] Perfil de administrador
+    * [ ] Crear, modificar y eliminar películas
+    * [ ] Crear, modificar y eliminar funciones
+* Agregar más validaciones e inserar modulo 11 para RUT
