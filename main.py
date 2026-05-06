@@ -109,7 +109,7 @@ class AppCine(ctk.CTk):
         datos_reserva["cliente_correo"] = self.usuario_actual["correo"]
         datos_reserva["cliente_nombre"] = self.usuario_actual["nombre"]
 
-        # 1. Guardar en reservas.json (Solución al JSONDecodeError)
+        # 1. Guardar en reservas.json
         ruta_reservas = os.path.join("datos", "reservas.json")
         reservas = []
         if os.path.exists(ruta_reservas):
@@ -117,14 +117,14 @@ class AppCine(ctk.CTk):
                 try:
                     reservas = json.load(f)
                 except json.JSONDecodeError:
-                    reservas = [] # Si el archivo está vacío o corrupto, crea una lista
-                    
+                    reservas = []
+        
         reservas.append(datos_reserva)
         
         with open(ruta_reservas, "w", encoding="utf-8") as f:
             json.dump(reservas, f, indent=4)
 
-        # 2. Actualizar peliculas.json
+        # 2. Actualizar peliculas.json (CORREGIDO LA ANIDACIÓN)
         ruta_peliculas = os.path.join("datos", "peliculas.json")
         peliculas = []
         if os.path.exists(ruta_peliculas):
@@ -134,16 +134,64 @@ class AppCine(ctk.CTk):
                 except json.JSONDecodeError:
                     peliculas = []
 
+        # Navegamos hasta el horario exacto para ocupar el asiento
         for peli in peliculas:
             if peli.get("titulo") == datos_reserva["pelicula_titulo"]:
-                ocupados = peli.get("asientos_ocupados", [])
-                ocupados.extend(datos_reserva["asientos"]) 
-                peli["asientos_ocupados"] = ocupados
+                for funcion in peli.get("funciones", []):
+                    if funcion.get("fecha") == datos_reserva["fecha"]:
+                        for horario in funcion.get("horarios", []):
+                            if horario.get("hora") == datos_reserva["hora"]:
+                                ocupados = horario.get("asientos_ocupados", [])
+                                ocupados.extend(datos_reserva["asientos"])
+                                # Evitamos duplicados con set()
+                                horario["asientos_ocupados"] = list(set(ocupados))
+                                break
+                        break
                 break
                 
         with open(ruta_peliculas, "w", encoding="utf-8") as f:
             json.dump(peliculas, f, indent=4)
 
+    def devolver_reserva(self, reserva_a_eliminar):
+        # 1. Eliminar de reservas.json
+        ruta_reservas = os.path.join("datos", "reservas.json")
+        if os.path.exists(ruta_reservas):
+            with open(ruta_reservas, "r", encoding="utf-8") as f:
+                reservas = json.load(f)
+            
+            # Filtramos dejando todas menos la que se va a devolver
+            reservas = [r for r in reservas if r != reserva_a_eliminar]
+            
+            with open(ruta_reservas, "w", encoding="utf-8") as f:
+                json.dump(reservas, f, indent=4)
+
+        # 2. Liberar asientos en peliculas.json
+        ruta_peliculas = os.path.join("datos", "peliculas.json")
+        if os.path.exists(ruta_peliculas):
+            with open(ruta_peliculas, "r", encoding="utf-8") as f:
+                peliculas = json.load(f)
+
+            # Navegamos hasta el horario exacto para liberar los asientos
+            for peli in peliculas:
+                if peli.get("titulo") == reserva_a_eliminar["pelicula_titulo"]:
+                    for funcion in peli.get("funciones", []):
+                        if funcion.get("fecha") == reserva_a_eliminar["fecha"]:
+                            for horario in funcion.get("horarios", []):
+                                if horario.get("hora") == reserva_a_eliminar["hora"]:
+                                    ocupados = horario.get("asientos_ocupados", [])
+                                    liberados = reserva_a_eliminar["asientos"]
+                                    # Mantenemos solo los que NO están en la lista de liberados
+                                    horario["asientos_ocupados"] = [a for a in ocupados if a not in liberados]
+                                    break
+                            break
+                    break
+
+            with open(ruta_peliculas, "w", encoding="utf-8") as f:
+                json.dump(peliculas, f, indent=4)
+
+        # 3. Refrescar la vista actual para que la tarjeta desaparezca
+        self.mostrar_mis_reservas()
+        
     # --- UTILIDAD ---
     def crear_archivos_base(self):
         """Asegura que los archivos JSON existan para evitar errores de lectura"""

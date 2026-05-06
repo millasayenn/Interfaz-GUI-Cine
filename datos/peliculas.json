@@ -3,17 +3,21 @@
         "id": 1,
         "titulo": "Spider-Man: No Way Home",
         "duracion": "148 min",
+        "clasificacion": "PG-13",
         "funciones": [
             {
                 "fecha": "10-05-2026",
                 "horarios": [
                     {
                         "hora": "15:00",
-                        "asientos_ocupados": []
+                        "asientos_ocupados": [
+                        ]
                     },
                     {
                         "hora": "18:30",
-                        "asientos_ocupados": []
+                        "asientos_ocupados": [
+
+                        ]
                     },
                     {
                         "hora": "21:00",
@@ -40,12 +44,13 @@
             }
         ],
         "asientos_ocupados": [
-        ]
+]
     },
     {
         "id": 2,
         "titulo": "Dune: Parte Dos",
         "duracion": "166 min",
+        "clasificacion": "PG-13",
         "funciones": [
             {
                 "fecha": "10-05-2026",
