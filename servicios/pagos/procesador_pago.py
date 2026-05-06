@@ -6,7 +6,8 @@ tiene un metodo llamado procesarCobro()"""
 
 class ProcesadorPago:
     def __init__(self):
-        self.estrategiaPago: IMetodoPago == None
+        self.estrategiaPago: IMetodoPago = None
+
     def setMetodoPago(self, metodo: IMetodoPago):
         #Asigna el método de pago que utilizará"
         self.estrategiaPago = metodo
