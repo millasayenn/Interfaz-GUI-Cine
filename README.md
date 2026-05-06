@@ -4,6 +4,13 @@ Este proyecto es una aplicación de escritorio desarrollada en Python enfocada e
 
 El diseño del sistema está estructurado utilizando la arquitectura **MVC (Modelo-Vista-Controlador)** y aplica estrictamente los principios **S.O.L.I.D.**, asegurando un código altamente cohesionado, con bajo acoplamiento y fácil de mantener.
 
+## Próximas funciones a implementar:
+* [ ] Modificación y eliminación de perfiles
+* [ ] Perfil de administrador
+    * [ ] Crear, modificar y eliminar películas
+    * [ ] Crear, modificar y eliminar funciones
+* Agregar más validaciones e inserar modulo 11 para RUT
+
 ## Arquitectura y Diseño (UML)
 
 Para resolver la instanciación de los métodos de pago sin acoplar el controlador a implementaciones concretas, se implementó el patrón creacional **Factory Method** (`FabricaPago`). Además, se utiliza el patrón **Strategy** para la ejecución de los cobros mediante la interfaz `IMetodoPago`.
@@ -75,10 +82,3 @@ classDiagram
     ProcesadorPago o-- IMetodoPago : Depende de (Composición)
     FabricaPago ..> IMetodoPago : Crea
     ```
-
-## Próximas funciones a implementar:
-* [ ] Modificación y eliminación de perfiles
-* [ ] Perfil de administrador
-    * [ ] Crear, modificar y eliminar películas
-    * [ ] Crear, modificar y eliminar funciones
-* Agregar más validaciones e inserar modulo 11 para RUT
