@@ -9,7 +9,9 @@ El diseño del sistema está estructurado utilizando la arquitectura **MVC (Mode
 * Perfil de administrador.
     * Crear, modificar y eliminar películas.
     * Crear, modificar y eliminar funciones.
-* Agregar más validaciones e insertar módulo 11 para RUT.
+* Mejorar validaciones:
+    * Insertar módulo 11 para RUT de usuario.
+    * Restricciones para devoluciones de asientos, por ejemplo, no poder devolver un asiento si quedan menos de 24 horas para la función.
 
 ## Arquitectura y Diseño (UML)
 
