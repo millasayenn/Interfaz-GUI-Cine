@@ -12,129 +12,78 @@ A continuación se detalla el diagrama de clases del sistema, que incluye el flu
 ```mermaid
 classDiagram
     %% ==========================================
-    %% CAPA DE VISTA (INTERFAZ DE USUARIO)
+    %% CAPA DE VISTAS (INTERFAZ DE USUARIO)
     %% ==========================================
+    class VistaLogin {
+        +intentar_login()
+        +intentar_registro()
+    }
     class VistaCartelera {
-        +mostrarPeliculas(peliculas: List)
-        +capturarSeleccionPelicula()
+        +actualizar_bienvenida(nombre: String)
+        +cargar_peliculas()
     }
     class VistaReserva {
-        +mostrarMapaAsientos(asientos: List)
-        +mostrarFormularioPago()
-        +mostrarMensaje(mensaje: String)
+        -asientos_seleccionados: List
+        +al_seleccionar_fecha()
+        +al_seleccionar_hora()
+        +iniciar_pago()
+        +finalizar_reserva()
+    }
+    class VistaMisReservas {
+        +cargar_mis_reservas(reservas: List)
+        +solicitar_devolucion(reserva: Dict)
     }
 
     %% ==========================================
-    %% CAPA DE CONTROLADORES (ORQUESTADORES)
+    %% CONTROLADOR PRINCIPAL Y ORQUESTADOR
     %% ==========================================
-    class ControladorReserva {
-        -vista: VistaReserva
-        -funcionActual: Funcion
-        -procesadorPago: ProcesadorPago
-        -notificador: INotificador
-        +seleccionarAsiento(numero: String)
-        +procesarCompra(tipoPago: String, cliente: Cliente)
-        +modificarAsientoReserva(idReserva: Int, nuevoAsiento: String)
-        +cancelarReserva(idReserva: Int)
-    }
-
-    %% ==========================================
-    %% CAPA DE MODELOS (DOMINIO)
-    %% ==========================================
-    class Cliente {
-        -id: Int
-        -nombre: String
-        -email: String
-    }
-
-    class Pelicula {
-        -titulo: String
-        -duracionMinutos: Int
-        -clasificacion: String
-    }
-
-    class Sala {
-        -numero: Int
-        -capacidad: Int
-    }
-
-    class Funcion {
-        -fechaHora: Datetime
-        -pelicula: Pelicula
-        -sala: Sala
-        -asientos: List~Asiento~
-        +obtenerAsientosDisponibles() List
-        +marcarAsientoOcupado(numero: String)
-        +liberarAsiento(numero: String)
-    }
-
-    class Asiento {
-        -numero: String
-        -ocupado: Boolean
-        +estaOcupado() Boolean
-    }
-
-    class Reserva {
-        -idReserva: Int
-        -fechaCreacion: Date
-        -montoTotal: Float
-        -estado: String
-        -cliente: Cliente
-        -asientosReservados: List~Asiento~
-        +generarComprobante() String
-        +cambiarEstado(nuevoEstado: String)
+    class AppCine {
+        -usuario_actual: Dict
+        +mostrar_login()
+        +mostrar_cartelera()
+        +mostrar_reserva(pelicula: Dict)
+        +mostrar_mis_reservas()
+        +procesar_login(correo: String, password: String)
+        +procesar_registro(nombre: String, correo: String, password: String)
+        +registrar_reserva(datos_reserva: Dict)
+        +devolver_reserva(reserva_a_eliminar: Dict)
     }
 
     %% ==========================================
-    %% SERVICIOS, INTERFACES Y PATRONES CREACIONALES
+    %% SERVICIOS Y PATRONES (CAPA S.O.L.I.D.)
     %% ==========================================
-    class INotificador {
-        <<interface>>
-        +enviar(destinatario: String, mensaje: String)
-    }
-
     class IMetodoPago {
         <<interface>>
-        +procesarCobro(monto: Float) Boolean
+        +procesar_pago(monto: Float) Boolean
     }
-    
     class FabricaPago {
         <<Factory Method>>
-        +crearMetodoPago(tipo: String) IMetodoPago
+        +crear_pago(tipo: String) IMetodoPago
     }
-
     class ProcesadorPago {
-        -estrategiaPago: IMetodoPago
-        +setMetodoPago(metodo: IMetodoPago)
-        +ejecutarPago(monto: Float) Boolean
+        -metodo_pago: IMetodoPago
+        +procesar_pago(monto: Float) Boolean
     }
-
     class PagoTarjeta {
-        +procesarCobro(monto: Float) Boolean
+        +procesar_pago(monto: Float) Boolean
     }
-
     class PagoEfectivo {
-        +procesarCobro(monto: Float) Boolean
+        +procesar_pago(monto: Float) Boolean
     }
 
     %% ==========================================
-    %% RELACIONES
+    %% RELACIONES Y DEPENDENCIAS
     %% ==========================================
+    AppCine *-- VistaLogin : Instancia y controla
+    AppCine *-- VistaCartelera : Instancia y controla
+    AppCine *-- VistaReserva : Instancia y controla
+    AppCine *-- VistaMisReservas : Instancia y controla
+
+    VistaReserva ..> FabricaPago : Solicita instanciación
+    VistaReserva --> ProcesadorPago : Delega proceso de pago
     
-    VistaReserva <-- ControladorReserva : Actualiza
-    ControladorReserva --> Funcion : Consulta/Modifica
-    ControladorReserva --> ProcesadorPago : Usa
-    ControladorReserva --> Reserva : Crea / Modifica
-    ControladorReserva --> INotificador : Usa
-    ControladorReserva ..> FabricaPago : Solicita instanciación
-
-    Funcion "1" --> "1" Pelicula
-    Funcion "1" --> "1" Sala
-    Funcion "1" *-- "*" Asiento : Contiene
-    Reserva "1" o-- "*" Asiento : Agrupa
-    Reserva "1" --> "1" Cliente : Pertenece a
-
     IMetodoPago <|.. PagoTarjeta : Implementa
     IMetodoPago <|.. PagoEfectivo : Implementa
-    ProcesadorPago o-- IMetodoPago : Depende de
+    ProcesadorPago o-- IMetodoPago : Depende de (Composición)
     FabricaPago ..> IMetodoPago : Crea
+    ```
