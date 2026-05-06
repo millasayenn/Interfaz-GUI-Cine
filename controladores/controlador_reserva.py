@@ -3,6 +3,7 @@ from modelos.funcion import Funcion
 from modelos.cliente import Cliente
 from modelos.reserva import Reserva
 #Importaciones de la capa Servicios
+from servicios.almacenamiento.gestor_json import GestorJSON
 from servicios.pagos.procesador_pago import ProcesadorPago
 from servicios.pagos.fabrica_pago import FabricaPago
 from servicios.notificaciones.notificador_email import NotificadorEmail
@@ -15,6 +16,7 @@ class ControladorReserva:
         # 2. Inicializamos tus servicios
         self.procesadorPago = ProcesadorPago()
         self.notificador = NotificadorEmail()
+
         
         # 3. Estado actual del sistema
         self.funcionActual: Funcion = None
@@ -22,6 +24,15 @@ class ControladorReserva:
         # 4. Un diccionario para guardar las reservas creadas (Simulando una base de datos)
         self.reservas_creadas = {}
         self.contador_id = 1
+
+        # 5. Cargar datos desde los archivos JSON
+        self.ruta_reservas = "datos/reservas.json"
+        self.ruta_peliculas = "datos/peliculas.json"
+        
+        # Leemos las películas al abrir el programa
+        self.lista_peliculas = GestorJSON.leer_datos(self.ruta_peliculas)
+        self.lista_reservas = GestorJSON.leer_datos(self.ruta_reservas)
+        
         
     def set_funcion_actual(self, funcion: Funcion):
         """Carga la función que el usuario seleccionó en la cartelera."""
@@ -49,26 +60,40 @@ class ControladorReserva:
             pago_exitoso = self.procesadorPago.ejecutarPago(monto_total)
             
             if pago_exitoso:
-                # === 2. EL CÓDIGO DE CRISTIAN EN ACCIÓN ===
-                # Creamos la reserva
+                # Creamos la reserva como objeto Python para usarlo en el programa
                 nueva_reserva = Reserva(
                     idReserva=self.contador_id,
-                    fechaCreacion="2026-05-05", # Fecha simulada
+                    fechaCreacion="2026-05-05",
                     montoTotal=monto_total,
                     estado="Confirmada",
                     cliente=cliente,
                     asientosReservados=asientos_seleccionados
                 )
                 
-                # Ocupamos los asientos en la función
+                # Crear la reserva como un diccionario (que es lo que entiende JSON)
+                nueva_reserva_dict = {
+                    "idReserva": self.contador_id,
+                    "fechaCreacion": "2026-05-05",
+                    "montoTotal": monto_total,
+                    "estado": "Confirmada",
+                    "cliente_email": cliente.email,
+                    "asientos": [a.numero for a in asientos_seleccionados]
+                }
+                
+                # Agregamos la nueva reserva a la lista JSON y guardamos
+                self.lista_reservas.append(nueva_reserva_dict)
+                GestorJSON.guardar_datos(self.ruta_reservas, self.lista_reservas)
+                
+                # Ocupamos los asientos en la función actual
                 for asiento in asientos_seleccionados:
                     self.funcionActual.marcarAsientoOcupado(asiento.numero)
                 
-                # Guardamos la reserva
+                # Guardamos el objeto reserva en la memoria temporal del programa
                 self.reservas_creadas[self.contador_id] = nueva_reserva
                 self.contador_id += 1
                 
                 # === 3. NOTIFICAMOS AL USUARIO ===
+                # Ahora sí funcionará porque "nueva_reserva" existe
                 comprobante = nueva_reserva.generarComprobante()
                 self.notificador.enviar(cliente.email, comprobante)
                 
@@ -80,6 +105,8 @@ class ControladorReserva:
             # Atrapamos los errores de tu fábrica (ej. si el tipo de pago no existe)
             self.vista.mostrarMensaje(str(e))
             return False
+        
+        
         
     def cancelarReserva(self, id_reserva: int):
         """Busca una reserva, la cancela y libera sus asientos."""

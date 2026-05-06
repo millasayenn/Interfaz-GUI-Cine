@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "titulo": "Avengers: Endgame",
+        "duracionMinutos": 181,
+        "clasificacion": "+14"
+    },
+    {
+        "id": 2,
+        "titulo": "Duna: Parte 2",
+        "duracionMinutos": 166,
+        "clasificacion": "TE"
+    }
+]
