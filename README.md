@@ -5,13 +5,16 @@ Este proyecto es una aplicación de escritorio desarrollada en Python enfocada e
 El diseño del sistema está estructurado utilizando la arquitectura **MVC (Modelo-Vista-Controlador)** y aplica estrictamente los principios **S.O.L.I.D.**, asegurando un código altamente cohesionado, con bajo acoplamiento y fácil de mantener.
 
 ## Próximas funciones a implementar:
+* Agregar salas en la boleta de reserva y en mis reservas.
+* Agregar cambio de precio para adulto y niño en la reserva.
 * Modificación y eliminación de perfiles de usuario.
-* Perfil de administrador.
+* Vista para el perfil de administrador.
     * Crear, modificar y eliminar películas.
     * Crear, modificar y eliminar funciones.
 * Mejorar validaciones:
     * Insertar módulo 11 para RUT de usuario.
     * Restricciones para devoluciones de asientos, por ejemplo, no poder devolver un asiento si quedan menos de 24 horas para la función.
+
 
 ## Arquitectura y Diseño (UML)
 

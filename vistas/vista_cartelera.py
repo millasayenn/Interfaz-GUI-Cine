@@ -65,8 +65,8 @@ class VistaCartelera(ctk.CTkFrame):
                 lbl_info = ctk.CTkLabel(frame_peli, text=info_texto, font=("Arial", 16, "bold"))
                 lbl_info.pack(anchor="w", padx=15, pady=(10, 5))
 
-                #lbl_sinopsis = ctk.CTkLabel(frame_peli, text=pelicula.get('sinopsis', 'Sin sinopsis disponible.'), wraplength=500, justify="left")
-                #lbl_sinopsis.pack(anchor="w", padx=15, pady=5)
+                lbl_sinopsis = ctk.CTkLabel(frame_peli, text=pelicula.get('sinopsis', 'Sin sinopsis disponible.'), wraplength=500, justify="left")
+                lbl_sinopsis.pack(anchor="w", padx=15, pady=5)
 
                 # El botón delega la acción al controlador para cambiar a VistaReserva
                 btn_reservar = ctk.CTkButton(frame_peli, text="Ver y Reservar", 

@@ -4,6 +4,7 @@
         "titulo": "Spider-Man: No Way Home",
         "duracion": "148 min",
         "clasificacion": "PG-13",
+        "sinopsis": "Peter Parker pide ayuda a Doctor Strange para que la gente olvide que es Spider-Man, pero el hechizo sale mal y pone en riesgo el multiverso.",
         "funciones": [
             {
                 "fecha": "10-05-2026",
@@ -47,6 +48,51 @@
         "titulo": "Dune: Parte Dos",
         "duracion": "166 min",
         "clasificacion": "PG-13",
+        "sinopsis": "Paul Atreides se une a los Fremen y busca vengar la muerte de su padre, mientras se enfrenta a una profec\u00eda que lo se\u00f1ala como mes\u00edas.",
+        "funciones": [
+            {
+                "fecha": "10-05-2026",
+                "horarios": [
+                    {
+                        "hora": "16:00",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "20:00",
+                        "asientos_ocupados": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "titulo": "Barbie",
+        "duracion": "114 min",
+        "clasificacion": "PG-13",
+        "sinopsis": "Barbie es expulsada de Barbieland por no ser suficientemente perfecta y emprende un viaje al mundo real para descubrir su verdadero significado.",
+        "funciones": [
+            {
+                "fecha": "10-05-2026",
+                "horarios": [
+                    {
+                        "hora": "16:00",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "20:00",
+                        "asientos_ocupados": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "titulo": "Toy Story",
+        "duracion": "81 min",
+        "clasificacion": "G",
+        "sinopsis": "Woody, un vaquero de juguete, ve amenazada su posici\u00f3n como l\u00edder cuando llega Buzz Lightyear, un astronauta con tecnolog\u00eda avanzada.",
         "funciones": [
             {
                 "fecha": "10-05-2026",

@@ -14,7 +14,9 @@ class AppCine(ctk.CTk):
         super().__init__()
         self.title("Sistema de Gestión de Cine")
         self.geometry("850x650")
-        
+        ctk.set_appearance_mode("dark")  # Opciones: "dark", "light", "system"
+        ctk.set_default_color_theme("blue")  # Opciones: "blue", "green", "dark-blue"
+
         # Variable de sesión
         self.usuario_actual = None 
         self.crear_archivos_base() # Asegura que existan los JSON

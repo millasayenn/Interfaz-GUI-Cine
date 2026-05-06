@@ -3,10 +3,5 @@
         "nombre": "milla",
         "correo": "milla@gmail.com",
         "password": "12345678"
-    },
-    {
-        "nombre": "a",
-        "correo": "a@gmail.com",
-        "password": "12345678"
     }
 ]
