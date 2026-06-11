@@ -5,8 +5,17 @@ Este proyecto es una aplicación de escritorio desarrollada en Python enfocada e
 El diseño del sistema está estructurado utilizando la arquitectura **MVC (Modelo-Vista-Controlador)** y aplica estrictamente los principios **S.O.L.I.D.**, asegurando un código altamente cohesionado, con bajo acoplamiento y fácil de mantener.
 
 ## Próximas funciones a implementar:
-* Agregar salas en la boleta de reserva y en mis reservas.
-* Agregar cambio de precio para adulto y niño en la reserva.
+
+* Vista de Reserva:
+    * Agregar salas en la boleta y en mis reservas.
+    * Agregar cambio de precio para adulto y niño en la reserva.
+    * Elegir el idioma de la pelicula y mostrar en la boleta y en mis reservas.
+    * Agregar funciones de acuerdo al idioma de la pelicula.
+    * Mostrar imagen de la pelicula.
+    * Agregar genero de la pelicula y filtrar en la cartelera por genero (arbol de generos).
+    * En mis reservas mostrar el precio final del adulto y niño y el precio total.
+    * En mis reservas mostrar el idioma y genero de la pelicula.
+    * En mis reservas mostrar la sala en la que se encuentra la pelicula. 
 * Modificación y eliminación de perfiles de usuario.
 * Vista para el perfil de administrador.
     * Crear, modificar y eliminar películas.
