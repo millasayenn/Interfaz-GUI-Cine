@@ -3,5 +3,10 @@
         "nombre": "milla",
         "correo": "milla@gmail.com",
         "password": "12345678"
+    },
+    {
+        "nombre": "cJesus",
+        "correo": "Cristian@gmail.com",
+        "password": "12345678"
     }
 ]

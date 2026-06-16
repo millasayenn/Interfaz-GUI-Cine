@@ -46,6 +46,12 @@ class VistaReserva(ctk.CTkFrame):
         self.cb_hora.grid(row=0, column=3, padx=5)
         self.cb_hora.configure(state="disabled")
 
+        self.lbl_idioma = ctk.CTkLabel(self.frame_selectores, text="Idioma:")
+        self.lbl_idioma.grid(row=0, column=4, padx=5)
+        self.cb_idioma = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_idioma)
+        self.cb_idioma.grid(row=0, column=5, padx=5)
+        self.cb_idioma.configure(state="disabled")
+
         # --- Cuadrícula de Asientos ---
         ctk.CTkLabel(self, text="Seleccione sus asientos (Gris: Disponible | Rojo: Ocupado):", font=("Arial", 14)).pack(pady=5)
         
@@ -98,9 +104,15 @@ class VistaReserva(ctk.CTkFrame):
         self.cb_hora.configure(values=[""], state="disabled")
         self.cb_hora.set("")
 
+        # Agrega esto:
+        self.cb_idioma.configure(values=[""], state="disabled")
+        self.cb_idioma.set("")
+
     def al_seleccionar_fecha(self, fecha_seleccionada):
         """Busca los horarios para la fecha y limpia los asientos"""
         self.limpiar_cuadricula() # Ocultar asientos hasta que elija hora
+        self.cb_idioma.configure(values=[""], state="disabled")
+        self.cb_idioma.set("")
         horas_disponibles = []
         
         for funcion in self.funciones_actuales:
@@ -124,8 +136,17 @@ class VistaReserva(ctk.CTkFrame):
             self.cb_hora.set("Sin horas")
 
     def al_seleccionar_hora(self, hora_seleccionada):
-        """Busca los asientos ocupados específicos para la fecha y hora seleccionada"""
+        """Habilita la selección de idioma al escoger una hora y limpia la cuadrícula."""
+        self.limpiar_cuadricula()
+        
+        # Como ahora todas las funciones tienen Doblada y Subtitulada:
+        self.cb_idioma.configure(values=["Doblada", "Subtitulada"], state="readonly")
+        self.cb_idioma.set("Seleccione idioma...")
+
+    def al_seleccionar_idioma(self, idioma_seleccionado):
+        """Busca los asientos ocupados específicos para la fecha, hora e IDIOMA seleccionado."""
         fecha_seleccionada = self.cb_fecha.get()
+        hora_seleccionada = self.cb_hora.get()
         asientos_ocupados = []
 
         for funcion in self.funciones_actuales:
@@ -136,7 +157,9 @@ class VistaReserva(ctk.CTkFrame):
                 for h in horarios:
                     h_str = h.get('hora') if isinstance(h, dict) else getattr(h, 'hora', '')
                     if h_str == hora_seleccionada:
-                        asientos_ocupados = h.get('asientos_ocupados', []) if isinstance(h, dict) else getattr(h, 'asientos_ocupados', [])
+                        # Buscamos en la nueva estructura de idiomas:
+                        idiomas = h.get('idiomas', {})
+                        asientos_ocupados = idiomas.get(idioma_seleccionado, [])
                         break
         
         self.generar_cuadricula_asientos(asientos_ocupados)
@@ -182,10 +205,14 @@ class VistaReserva(ctk.CTkFrame):
             messagebox.showwarning("Faltan datos", "Debe seleccionar una hora.")
             return
 
+        if self.cb_idioma.get() == "Seleccione idioma..." or self.cb_idioma.get() == "":
+            messagebox.showwarning("Faltan datos", "Debe seleccionar un idioma.")
+            return
+
         if not self.asientos_seleccionados:
             messagebox.showwarning("Sin asientos", "Debe seleccionar al menos un asiento para reservar.")
             return
-        
+
         self.ventana_pago = ctk.CTkToplevel(self)
         self.ventana_pago.title("Proceso de Pago")
         self.ventana_pago.geometry("400x300")
@@ -221,6 +248,7 @@ class VistaReserva(ctk.CTkFrame):
             "pelicula_titulo": titulo,
             "fecha": self.cb_fecha.get(),
             "hora": self.cb_hora.get(),
+            "idioma": self.cb_idioma.get(),
             "asientos": self.asientos_seleccionados,
             "metodo_pago": tipo_seleccionado,
             "total": self.total
@@ -237,6 +265,7 @@ class VistaReserva(ctk.CTkFrame):
             f"Película: {titulo}\n"
             f"Fecha: {self.cb_fecha.get()}\n"
             f"Hora: {self.cb_hora.get()}\n"
+            f"Idioma: {self.cb_idioma.get()}\n"
             f"Asientos: {', '.join(self.asientos_seleccionados)}\n"
             f"Total Pagado: ${self.total} ({tipo_seleccionado.capitalize()})"
         )

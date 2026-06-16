@@ -7,41 +7,32 @@
         "sinopsis": "Peter Parker pide ayuda a Doctor Strange para que la gente olvide que es Spider-Man, pero el hechizo sale mal y pone en riesgo el multiverso.",
         "funciones": [
             {
-                "fecha": "10-05-2026",
+                "fecha": "20-06-2026",
                 "horarios": [
                     {
                         "hora": "15:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     },
                     {
                         "hora": "18:30",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     },
                     {
                         "hora": "21:00",
-                        "asientos_ocupados": []
-                    }
-                ]
-            },
-            {
-                "fecha": "11-05-2026",
-                "horarios": [
-                    {
-                        "hora": "14:00",
-                        "asientos_ocupados": []
-                    },
-                    {
-                        "hora": "17:30",
-                        "asientos_ocupados": []
-                    },
-                    {
-                        "hora": "20:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     }
                 ]
             }
-        ],
-        "asientos_ocupados": []
+        ]
     },
     {
         "id": 2,
@@ -51,15 +42,21 @@
         "sinopsis": "Paul Atreides se une a los Fremen y busca vengar la muerte de su padre, mientras se enfrenta a una profec\u00eda que lo se\u00f1ala como mes\u00edas.",
         "funciones": [
             {
-                "fecha": "10-05-2026",
+                "fecha": "21-06-2026",
                 "horarios": [
                     {
                         "hora": "16:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     },
                     {
                         "hora": "20:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     }
                 ]
             }
@@ -73,15 +70,21 @@
         "sinopsis": "Barbie es expulsada de Barbieland por no ser suficientemente perfecta y emprende un viaje al mundo real para descubrir su verdadero significado.",
         "funciones": [
             {
-                "fecha": "10-05-2026",
+                "fecha": "22-06-2026",
                 "horarios": [
                     {
                         "hora": "16:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     },
                     {
                         "hora": "20:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     }
                 ]
             }
@@ -95,15 +98,21 @@
         "sinopsis": "Woody, un vaquero de juguete, ve amenazada su posici\u00f3n como l\u00edder cuando llega Buzz Lightyear, un astronauta con tecnolog\u00eda avanzada.",
         "funciones": [
             {
-                "fecha": "10-05-2026",
+                "fecha": "23-06-2026",
                 "horarios": [
                     {
                         "hora": "16:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     },
                     {
                         "hora": "20:00",
-                        "asientos_ocupados": []
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
                     }
                 ]
             }

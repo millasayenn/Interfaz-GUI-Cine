@@ -143,10 +143,16 @@ class AppCine(ctk.CTk):
                     if funcion.get("fecha") == datos_reserva["fecha"]:
                         for horario in funcion.get("horarios", []):
                             if horario.get("hora") == datos_reserva["hora"]:
-                                ocupados = horario.get("asientos_ocupados", [])
+                                # Extraemos el idioma seleccionado y su stock
+                                idioma_elegido = datos_reserva.get("idioma", "Doblada")
+                                idiomas = horario.get("idiomas", {"Doblada": [], "Subtitulada": []})
+                                
+                                ocupados = idiomas.get(idioma_elegido, [])
                                 ocupados.extend(datos_reserva["asientos"])
-                                # Evitamos duplicados con set()
-                                horario["asientos_ocupados"] = list(set(ocupados))
+                                
+                                # Evitamos duplicados y lo inyectamos de vuelta
+                                idiomas[idioma_elegido] = list(set(ocupados))
+                                horario["idiomas"] = idiomas
                                 break
                         break
                 break
@@ -180,10 +186,15 @@ class AppCine(ctk.CTk):
                         if funcion.get("fecha") == reserva_a_eliminar["fecha"]:
                             for horario in funcion.get("horarios", []):
                                 if horario.get("hora") == reserva_a_eliminar["hora"]:
-                                    ocupados = horario.get("asientos_ocupados", [])
+                                    idioma_elegido = reserva_a_eliminar.get("idioma", "Doblada")
+                                    idiomas = horario.get("idiomas", {"Doblada": [], "Subtitulada": []})
+                                    
+                                    ocupados = idiomas.get(idioma_elegido, [])
                                     liberados = reserva_a_eliminar["asientos"]
-                                    # Mantenemos solo los que NO están en la lista de liberados
-                                    horario["asientos_ocupados"] = [a for a in ocupados if a not in liberados]
+                                    
+                                    # Mantenemos solo los que NO están en la lista de liberados en ese idioma
+                                    idiomas[idioma_elegido] = [a for a in ocupados if a not in liberados]
+                                    horario["idiomas"] = idiomas
                                     break
                             break
                     break

@@ -15,7 +15,7 @@ El diseño del sistema está estructurado utilizando la arquitectura **MVC (Mode
 * Vista de Reserva:
     * Agregar salas en la boleta y en mis reservas.
     * Agregar cambio de precio para adulto y niño en la reserva.
-    * Elegir el idioma de la pelicula y mostrar en la boleta y en mis reservas como funciones en salas distintas distintas.
+    * Elegir el idioma de la pelicula y mostrar en la boleta y en mis reservas como funciones en salas distintas.
     * Agregar género de la película y filtrar en la cartelera por género (arbol de géneros, aplica Patrón Composite).
 * Modificación y eliminación de perfiles de usuario.
 * Vista para el perfil de administrador.

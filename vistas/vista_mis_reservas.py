@@ -32,9 +32,9 @@ class VistaMisReservas(ctk.CTkFrame):
             frame_reserva.pack(pady=5, padx=5, fill="x")
 
             detalles = (
-                f"🎬 {reserva.get('pelicula_titulo')}\n"
-                f"📅 {reserva.get('fecha')} | ⏰ {reserva.get('hora')}\n"
-                f"💺 Asientos: {', '.join(reserva.get('asientos', []))}"
+                f" {reserva.get('pelicula_titulo')}\n"
+                f" {reserva.get('fecha')} | {reserva.get('hora')} | {reserva.get('idioma', 'Doblada')}\n"
+                f" Asientos: {', '.join(reserva.get('asientos', []))}"
             )
 
             lbl_info = ctk.CTkLabel(frame_reserva, text=detalles, justify="left", font=("Arial", 12))
