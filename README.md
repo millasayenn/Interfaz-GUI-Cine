@@ -28,26 +28,7 @@ Para resolver la instanciación de los métodos de pago sin acoplar el controlad
 A continuación se detalla el diagrama de clases del sistema, que incluye el flujo completo (CRUD) de las reservas:
 ```mermaid
 classDiagram
-    class VistaLogin {
-        +intentar_login()
-        +intentar_registro()
-    }
-    class VistaCartelera {
-        +actualizar_bienvenida(nombre: String)
-        +cargar_peliculas()
-    }
-    class VistaReserva {
-        -asientos_seleccionados: List
-        +al_seleccionar_fecha()
-        +al_seleccionar_hora()
-        +iniciar_pago()
-        +finalizar_reserva()
-    }
-    class VistaMisReservas {
-        +cargar_mis_reservas(reservas: List)
-        +solicitar_devolucion(reserva: Dict)
-    }
-
+    %% --- CLASE PRINCIPAL Y VISTAS (MVC) ---
     class AppCine {
         -usuario_actual: Dict
         +mostrar_login()
@@ -60,35 +41,95 @@ classDiagram
         +devolver_reserva(reserva_a_eliminar: Dict)
     }
 
+    class VistaMisReservas {
+        +cargar_mis_reservas(reservas: List)
+        +solicitar_devolucion(reserva: Dict)
+    }
+
+    class VistaLogin {
+        +intentar_login()
+        +intentar_registro()
+    }
+
+    class VistaCartelera {
+        +actualizar_bienvenida(nombre: String)
+        +cargar_peliculas()
+    }
+
+    class VistaReserva {
+        -asientos_seleccionados: List
+        +al_seleccionar_fecha()
+        +al_seleccionar_hora()
+        +iniciar_pago()
+        +finalizar_reserva()
+    }
+
+    %% --- SISTEMA DE PAGOS (FACTORY METHOD & STRATEGY) ---
     class IMetodoPago {
         <<interface>>
         +procesar_pago(monto: Float) Boolean
     }
-    class FabricaPago {
-        <<Factory Method>>
-        +crear_pago(tipo: String) IMetodoPago
-    }
-    class ProcesadorPago {
-        -metodo_pago: IMetodoPago
-        +procesar_pago(monto: Float) Boolean
-    }
+
     class PagoTarjeta {
         +procesar_pago(monto: Float) Boolean
     }
+
     class PagoEfectivo {
         +procesar_pago(monto: Float) Boolean
     }
 
+    class FabricaPago {
+        <<Factory Method>>
+        +crear_pago(tipo: String) IMetodoPago
+    }
+
+    class ProcesadorPago {
+        -metodo_pago: IMetodoPago
+        +procesar_pago(monto: Float) Boolean
+    }
+
+    %% --- SISTEMA DE GÉNEROS (PATRÓN COMPOSITE) ---
+    class ComponenteGenero {
+        <<interface>>
+        +obtener_peliculas() List
+        +obtener_nombre() String
+    }
+
+    class SubgeneroHoja {
+        -nombre: String
+        -peliculas: List
+        +obtener_peliculas() List
+        +obtener_nombre() String
+    }
+
+    class GeneroCompuesto {
+        -nombre: String
+        -subgeneros: List~ComponenteGenero~
+        +agregar(g: ComponenteGenero)
+        +obtener_peliculas() List
+        +obtener_nombre() String
+    }
+
+    %% --- RELACIONES APP Y VISTAS ---
+    AppCine *-- VistaMisReservas : Instancia y controla
     AppCine *-- VistaLogin : Instancia y controla
     AppCine *-- VistaCartelera : Instancia y controla
     AppCine *-- VistaReserva : Instancia y controla
-    AppCine *-- VistaMisReservas : Instancia y controla
 
+    %% --- CONEXIÓN DE LA VISTA CON EL COMPOSITE ---
+    VistaCartelera --> ComponenteGenero : Usa/Depende
+
+    %% --- RELACIONES DEL PATRÓN COMPOSITE ---
+    ComponenteGenero <|.. SubgeneroHoja : Implementa
+    ComponenteGenero <|.. GeneroCompuesto : Implementa
+    GeneroCompuesto o--> ComponenteGenero : Contiene (Agregación)
+
+    %% --- RELACIONES DEL SISTEMA DE PAGOS ---
     VistaReserva ..> FabricaPago : Solicita instanciación
     VistaReserva --> ProcesadorPago : Delega proceso de pago
+
+    FabricaPago ..> IMetodoPago : Crea
+    ProcesadorPago o-- IMetodoPago : Depende de (Composición)
     
     IMetodoPago <|.. PagoTarjeta : Implementa
     IMetodoPago <|.. PagoEfectivo : Implementa
-    ProcesadorPago o-- IMetodoPago : Depende de (Composición)
-    FabricaPago ..> IMetodoPago : Crea
-    ```
