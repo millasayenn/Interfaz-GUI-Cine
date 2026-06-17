@@ -12,8 +12,6 @@ El diseño del sistema está estructurado utilizando la arquitectura **MVC (Mode
     * En mis reservas mostrar el idioma y genero de la película.
     * En mis reservas mostrar la sala en la que se encuentra la película. 
 
-* Vista de Reserva:
-    * Agregar género de la película y filtrar en la cartelera por género (arbol de géneros, aplica Patrón Composite).
 * Modificación y eliminación de perfiles de usuario.
 * Vista para el perfil de administrador.
     * Crear, modificar y eliminar películas.
