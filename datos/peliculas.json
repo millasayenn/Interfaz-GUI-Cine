@@ -12,7 +12,10 @@
                     {
                         "hora": "15:00",
                         "idiomas": {
-                            "Doblada": [],
+                            "Doblada": [
+                                "C3",
+                                "C4"
+                            ],
                             "Subtitulada": []
                         }
                     },

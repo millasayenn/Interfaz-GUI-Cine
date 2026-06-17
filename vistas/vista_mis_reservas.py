@@ -32,9 +32,11 @@ class VistaMisReservas(ctk.CTkFrame):
             frame_reserva.pack(pady=5, padx=5, fill="x")
 
             detalles = (
-                f" {reserva.get('pelicula_titulo')}\n"
-                f" {reserva.get('fecha')} | {reserva.get('hora')} | {reserva.get('idioma', 'Doblada')}\n"
-                f" Asientos: {', '.join(reserva.get('asientos', []))}"
+                f"{reserva.get('pelicula_titulo')} | {reserva.get('sala', 'Sala 1')}\n"
+                f"{reserva.get('fecha')} | {reserva.get('hora')} | {reserva.get('idioma', 'Doblada')}\n"
+                f"Asientos: {', '.join(reserva.get('asientos', []))} "
+                f"({reserva.get('cant_adultos', 0)} Adultos, {reserva.get('cant_ninos', 0)} Niños)\n"
+                f"Total pagado: ${reserva.get('total', 0)}"
             )
 
             lbl_info = ctk.CTkLabel(frame_reserva, text=detalles, justify="left", font=("Arial", 12))

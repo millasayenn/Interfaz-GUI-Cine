@@ -34,47 +34,53 @@ class ControladorReserva:
         
         
     def set_funcion_actual(self, funcion: Funcion):
-        """Carga la función que el usuario seleccionó en la cartelera."""
+        # Carga la función que el usuario seleccionó en la cartelera
         self.funcionActual = funcion
 
-    def procesarCompra(self, tipo_pago: str, cliente: Cliente, asientos_seleccionados: list) -> bool:
-        """
-        Orquesta todo el proceso de cobrar, crear la reserva y notificar.
-        """
+    def procesarCompra(self, tipo_pago: str, cliente: Cliente, asientos_seleccionados: list, sala: str = "Sala 1", cant_adultos: int = 0, cant_ninos: int = 0) -> bool:
         # Validamos que haya seleccionado asientos
         if not asientos_seleccionados:
             self.vista.mostrarMensaje("Error: Debes seleccionar al menos un asiento.")
             return False
             
-        # Calculamos el total (Supongamos que cada entrada vale $5000)
-        monto_total = len(asientos_seleccionados) * 5000.0
+        # 1. Calculamos el total con los nuevos precios de adulto y niño
+        monto_total = (cant_adultos * 5000.0) + (cant_ninos * 3000.0)
         
         try:
-            metodo = FabricaPago.crearMetodoPago(tipo_pago)
-            self.procesadorPago.setMetodoPago(metodo)
+            # Corrección: El método real en tu archivo fabrica_pago.py es crear_pago()
+            metodo = FabricaPago.crear_pago(tipo_pago)
             
-            # Ejecutamos el cobro
-            pago_exitoso = self.procesadorPago.ejecutarPago(monto_total)
+            # Corrección: Instanciamos el ProcesadorPago pasándole el método
+            procesador_pago_inst = ProcesadorPago(metodo)
+            
+            # Ejecutamos el cobro usando procesar_pago
+            pago_exitoso = procesador_pago_inst.procesar_pago(monto_total)
             
             if pago_exitoso:
-                # Creamos la reserva como objeto Python para usarlo en el programa
+                # LINEA 62 - Creamos la reserva con los nombres de parámetros CORRECTOS
                 nueva_reserva = Reserva(
-                    idReserva=self.contador_id,
-                    fechaCreacion="2026-05-05",
-                    montoTotal=monto_total,
+                    id_reserva=self.contador_id,
+                    fecha_creacion="2026-05-05",
+                    monto_total=monto_total,
                     estado="Confirmada",
                     cliente=cliente,
-                    asientosReservados=asientos_seleccionados
+                    asientos_reservados=asientos_seleccionados,
+                    sala=sala,                     # NUEVO CAMPO
+                    cant_adultos=cant_adultos,     # NUEVO CAMPO
+                    cant_ninos=cant_ninos          # NUEVO CAMPO
                 )
                 
-                # Crear la reserva como un diccionario (que es lo que entiende JSON)
+                # Crear la reserva como un diccionario (para el JSON)
                 nueva_reserva_dict = {
                     "idReserva": self.contador_id,
                     "fechaCreacion": "2026-05-05",
                     "montoTotal": monto_total,
                     "estado": "Confirmada",
                     "cliente_email": cliente.email,
-                    "asientos": [a.numero for a in asientos_seleccionados]
+                    "asientos": [a.numero for a in asientos_seleccionados],
+                    "sala": sala,                  # NUEVO CAMPO
+                    "cant_adultos": cant_adultos,  # NUEVO CAMPO
+                    "cant_ninos": cant_ninos       # NUEVO CAMPO
                 }
                 
                 # Agregamos la nueva reserva a la lista JSON y guardamos
@@ -97,7 +103,7 @@ class ControladorReserva:
                 
         except ValueError as e:
             self.vista.mostrarMensaje(str(e))
-            return False 
+            return False
 
     def registrar_reserva(self, datos_reserva):
         """

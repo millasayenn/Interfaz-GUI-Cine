@@ -46,6 +46,7 @@ class VistaReserva(ctk.CTkFrame):
         self.cb_hora.grid(row=0, column=3, padx=5)
         self.cb_hora.configure(state="disabled")
 
+        # Idioma
         self.lbl_idioma = ctk.CTkLabel(self.frame_selectores, text="Idioma:")
         self.lbl_idioma.grid(row=0, column=4, padx=5)
         self.cb_idioma = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_idioma)
@@ -205,24 +206,45 @@ class VistaReserva(ctk.CTkFrame):
             messagebox.showwarning("Faltan datos", "Debe seleccionar una hora.")
             return
 
-        if self.cb_idioma.get() == "Seleccione idioma..." or self.cb_idioma.get() == "":
-            messagebox.showwarning("Faltan datos", "Debe seleccionar un idioma.")
-            return
-
         if not self.asientos_seleccionados:
             messagebox.showwarning("Sin asientos", "Debe seleccionar al menos un asiento para reservar.")
             return
-
+        
         self.ventana_pago = ctk.CTkToplevel(self)
         self.ventana_pago.title("Proceso de Pago")
-        self.ventana_pago.geometry("400x300")
+        self.ventana_pago.geometry("400x420") # Agrandamos la ventana para los nuevos selectores
         self.ventana_pago.attributes("-topmost", True)
         self.ventana_pago.grab_set() 
 
-        ctk.CTkLabel(self.ventana_pago, text="Pasarela de Pago", font=("Arial", 20, "bold")).pack(pady=20)
+        ctk.CTkLabel(self.ventana_pago, text="Pasarela de Pago", font=("Arial", 20, "bold")).pack(pady=10)
         
-        self.total = len(self.asientos_seleccionados) * 5000
-        ctk.CTkLabel(self.ventana_pago, text=f"Total a Pagar: ${self.total}", font=("Arial", 16)).pack(pady=10)
+        cantidad_asientos = len(self.asientos_seleccionados)
+        ctk.CTkLabel(self.ventana_pago, text=f"Asientos seleccionados: {cantidad_asientos}", font=("Arial", 14)).pack(pady=5)
+
+        # --- SELECCIÓN DE ENTRADAS (Adultos/Niños) ---
+        self.precio_adulto = 5000
+        self.precio_nino = 3000
+        self.total = cantidad_asientos * self.precio_adulto # Por defecto calcula todo como adultos
+
+        self.cant_adultos_var = ctk.StringVar(value=str(cantidad_asientos))
+        self.cant_ninos_var = ctk.StringVar(value="0")
+
+        frame_entradas = ctk.CTkFrame(self.ventana_pago, fg_color="transparent")
+        frame_entradas.pack(pady=10)
+
+        opciones = [str(i) for i in range(cantidad_asientos + 1)] # Opciones del 0 a la cantidad de asientos
+
+        ctk.CTkLabel(frame_entradas, text="Adultos ($5000):").grid(row=0, column=0, padx=5, pady=5)
+        self.cb_adultos = ctk.CTkComboBox(frame_entradas, values=opciones, variable=self.cant_adultos_var, command=self.actualizar_total, width=80)
+        self.cb_adultos.grid(row=0, column=1, padx=5, pady=5)
+
+        ctk.CTkLabel(frame_entradas, text="Niños ($3000):").grid(row=1, column=0, padx=5, pady=5)
+        self.cb_ninos = ctk.CTkComboBox(frame_entradas, values=opciones, variable=self.cant_ninos_var, command=self.actualizar_total, width=80)
+        self.cb_ninos.grid(row=1, column=1, padx=5, pady=5)
+        # ---------------------------------------------
+
+        self.lbl_total = ctk.CTkLabel(self.ventana_pago, text=f"Total a Pagar: ${self.total}", font=("Arial", 16, "bold"))
+        self.lbl_total.pack(pady=10)
 
         self.metodo_pago = ctk.CTkComboBox(self.ventana_pago, values=["tarjeta", "efectivo"], state="readonly")
         self.metodo_pago.pack(pady=10)
@@ -230,48 +252,68 @@ class VistaReserva(ctk.CTkFrame):
         ctk.CTkButton(self.ventana_pago, text="Confirmar y Pagar", fg_color="green", command=self.finalizar_reserva).pack(pady=10)
         ctk.CTkButton(self.ventana_pago, text="Cancelar", fg_color="red", command=self.ventana_pago.destroy).pack(pady=5)
 
+    def actualizar_total(self, _):
+        """Calcula el precio en tiempo real cuando se cambian los selectores"""
+        try:
+            adultos = int(self.cant_adultos_var.get())
+            ninos = int(self.cant_ninos_var.get())
+            self.total = (adultos * self.precio_adulto) + (ninos * self.precio_nino)
+            self.lbl_total.configure(text=f"Total a Pagar: ${self.total}")
+        except ValueError:
+            pass
+
     def finalizar_reserva(self):
+        # 1. Validar que las entradas coincidan con los asientos
+        try:
+            adultos = int(self.cant_adultos_var.get())
+            ninos = int(self.cant_ninos_var.get())
+        except ValueError:
+            return
+
+        if (adultos + ninos) != len(self.asientos_seleccionados):
+            messagebox.showwarning("Error de Entradas", f"Debe asignar exactamente {len(self.asientos_seleccionados)} entrada(s) en total.")
+            return
+
         tipo_seleccionado = self.metodo_pago.get()
 
         try:
             metodo = FabricaPago.crear_pago(tipo_seleccionado) 
             procesador = ProcesadorPago(metodo)
             procesador.procesar_pago(self.total)
-            
         except Exception as e:
             messagebox.showerror("Error de Pago", f"Hubo un error con la pasarela: {str(e)}")
             return
 
         titulo = self.pelicula_actual.get("titulo") if isinstance(self.pelicula_actual, dict) else getattr(self.pelicula_actual, "titulo", "Desconocido")
+        sala_asignada = "Sala 1" # Aquí asignamos la sala que se guardará
 
+        # Al guardar este diccionario, main.py lo incrustará automáticamente en reservas.json
         datos_reserva = {
             "pelicula_titulo": titulo,
+            "sala": sala_asignada, 
             "fecha": self.cb_fecha.get(),
             "hora": self.cb_hora.get(),
-            "idioma": self.cb_idioma.get(),
             "asientos": self.asientos_seleccionados,
+            "cant_adultos": adultos,
+            "cant_ninos": ninos,
             "metodo_pago": tipo_seleccionado,
             "total": self.total
         }
 
-        # 1. Destruimos la ventana de pago
         self.ventana_pago.destroy() 
-        
-        # 2. Registramos la reserva UNA SOLA VEZ
         self.controlador.registrar_reserva(datos_reserva)
         
-        # 3. Armamos y mostramos el ticket
+        # Boleta actualizada
         detalle_ticket = (
             f"Película: {titulo}\n"
+            f"Sala: {sala_asignada}\n"
             f"Fecha: {self.cb_fecha.get()}\n"
             f"Hora: {self.cb_hora.get()}\n"
-            f"Idioma: {self.cb_idioma.get()}\n"
             f"Asientos: {', '.join(self.asientos_seleccionados)}\n"
+            f"Entradas: {adultos} Adulto(s) | {ninos} Niño(s)\n"
             f"Total Pagado: ${self.total} ({tipo_seleccionado.capitalize()})"
         )
         messagebox.showinfo("¡Reserva Confirmada!", detalle_ticket)
-        
-        # 4. Volvemos al inicio
         self.volver_cartelera()
 
     def volver_cartelera(self):

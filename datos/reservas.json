@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "pelicula_titulo": "Spider-Man: No Way Home",
+        "sala": "Sala 1",
+        "fecha": "20-06-2026",
+        "hora": "15:00",
+        "asientos": [
+            "C3",
+            "C4"
+        ],
+        "cant_adultos": 1,
+        "cant_ninos": 1,
+        "metodo_pago": "tarjeta",
+        "total": 8000,
+        "cliente_correo": "milla@gmail.com",
+        "cliente_nombre": "milla"
+    }
+]
