@@ -4,14 +4,14 @@
         "sala": "Sala 1",
         "fecha": "20-06-2026",
         "hora": "15:00",
+        "idioma": "Doblada",
         "asientos": [
-            "C3",
-            "C4"
+            "E3"
         ],
-        "cant_adultos": 1,
+        "cant_adultos": 0,
         "cant_ninos": 1,
         "metodo_pago": "tarjeta",
-        "total": 8000,
+        "total": 3000,
         "cliente_correo": "milla@gmail.com",
         "cliente_nombre": "milla"
     }

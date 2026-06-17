@@ -212,7 +212,7 @@ class VistaReserva(ctk.CTkFrame):
         
         self.ventana_pago = ctk.CTkToplevel(self)
         self.ventana_pago.title("Proceso de Pago")
-        self.ventana_pago.geometry("400x420") # Agrandamos la ventana para los nuevos selectores
+        self.ventana_pago.geometry("400x420")
         self.ventana_pago.attributes("-topmost", True)
         self.ventana_pago.grab_set() 
 
@@ -224,7 +224,7 @@ class VistaReserva(ctk.CTkFrame):
         # --- SELECCIÓN DE ENTRADAS (Adultos/Niños) ---
         self.precio_adulto = 5000
         self.precio_nino = 3000
-        self.total = cantidad_asientos * self.precio_adulto # Por defecto calcula todo como adultos
+        self.total = cantidad_asientos * self.precio_adulto 
 
         self.cant_adultos_var = ctk.StringVar(value=str(cantidad_asientos))
         self.cant_ninos_var = ctk.StringVar(value="0")
@@ -232,17 +232,18 @@ class VistaReserva(ctk.CTkFrame):
         frame_entradas = ctk.CTkFrame(self.ventana_pago, fg_color="transparent")
         frame_entradas.pack(pady=10)
 
-        opciones = [str(i) for i in range(cantidad_asientos + 1)] # Opciones del 0 a la cantidad de asientos
+        opciones = [str(i) for i in range(cantidad_asientos + 1)] 
 
         ctk.CTkLabel(frame_entradas, text="Adultos ($5000):").grid(row=0, column=0, padx=5, pady=5)
-        self.cb_adultos = ctk.CTkComboBox(frame_entradas, values=opciones, variable=self.cant_adultos_var, command=self.actualizar_total, width=80)
+        self.cb_adultos = ctk.CTkComboBox(frame_entradas, values=opciones, variable=self.cant_adultos_var, command=self.al_cambiar_adultos, width=80)
         self.cb_adultos.grid(row=0, column=1, padx=5, pady=5)
 
         ctk.CTkLabel(frame_entradas, text="Niños ($3000):").grid(row=1, column=0, padx=5, pady=5)
-        self.cb_ninos = ctk.CTkComboBox(frame_entradas, values=opciones, variable=self.cant_ninos_var, command=self.actualizar_total, width=80)
+        self.cb_ninos = ctk.CTkComboBox(frame_entradas, values=opciones, variable=self.cant_ninos_var, command=self.al_cambiar_ninos, width=80)
         self.cb_ninos.grid(row=1, column=1, padx=5, pady=5)
         # ---------------------------------------------
 
+        # --- ESTA ES LA PARTE QUE SE HABÍA BORRADO ---
         self.lbl_total = ctk.CTkLabel(self.ventana_pago, text=f"Total a Pagar: ${self.total}", font=("Arial", 16, "bold"))
         self.lbl_total.pack(pady=10)
 
@@ -251,6 +252,28 @@ class VistaReserva(ctk.CTkFrame):
 
         ctk.CTkButton(self.ventana_pago, text="Confirmar y Pagar", fg_color="green", command=self.finalizar_reserva).pack(pady=10)
         ctk.CTkButton(self.ventana_pago, text="Cancelar", fg_color="red", command=self.ventana_pago.destroy).pack(pady=5)
+
+    def al_cambiar_adultos(self, valor):
+        """Calcula automáticamente la cantidad de niños si cambia la de adultos"""
+        try:
+            adultos = int(valor)
+            total_asientos = len(self.asientos_seleccionados)
+            ninos = total_asientos - adultos
+            self.cant_ninos_var.set(str(ninos)) # Actualiza la barra de niños
+            self.actualizar_total(None)         # Recalcula el dinero
+        except ValueError:
+            pass
+
+    def al_cambiar_ninos(self, valor):
+        """Calcula automáticamente la cantidad de adultos si cambia la de niños"""
+        try:
+            ninos = int(valor)
+            total_asientos = len(self.asientos_seleccionados)
+            adultos = total_asientos - ninos
+            self.cant_adultos_var.set(str(adultos)) # Actualiza la barra de adultos
+            self.actualizar_total(None)             # Recalcula el dinero
+        except ValueError:
+            pass
 
     def actualizar_total(self, _):
         """Calcula el precio en tiempo real cuando se cambian los selectores"""
@@ -293,6 +316,7 @@ class VistaReserva(ctk.CTkFrame):
             "sala": sala_asignada, 
             "fecha": self.cb_fecha.get(),
             "hora": self.cb_hora.get(),
+            "idioma": self.cb_idioma.get(),
             "asientos": self.asientos_seleccionados,
             "cant_adultos": adultos,
             "cant_ninos": ninos,
@@ -309,6 +333,7 @@ class VistaReserva(ctk.CTkFrame):
             f"Sala: {sala_asignada}\n"
             f"Fecha: {self.cb_fecha.get()}\n"
             f"Hora: {self.cb_hora.get()}\n"
+            f"Idioma: {self.cb_idioma.get()}\n"
             f"Asientos: {', '.join(self.asientos_seleccionados)}\n"
             f"Entradas: {adultos} Adulto(s) | {ninos} Niño(s)\n"
             f"Total Pagado: ${self.total} ({tipo_seleccionado.capitalize()})"

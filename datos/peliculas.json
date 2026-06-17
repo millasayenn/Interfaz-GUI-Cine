@@ -3,6 +3,7 @@
         "id": 1,
         "titulo": "Spider-Man: No Way Home",
         "duracion": "148 min",
+        "genero": "Superheroes",
         "clasificacion": "PG-13",
         "sinopsis": "Peter Parker pide ayuda a Doctor Strange para que la gente olvide que es Spider-Man, pero el hechizo sale mal y pone en riesgo el multiverso.",
         "funciones": [
@@ -12,10 +13,7 @@
                     {
                         "hora": "15:00",
                         "idiomas": {
-                            "Doblada": [
-                                "C3",
-                                "C4"
-                            ],
+                            "Doblada": [],
                             "Subtitulada": []
                         }
                     },
@@ -41,6 +39,7 @@
         "id": 2,
         "titulo": "Dune: Parte Dos",
         "duracion": "166 min",
+        "genero": "Acci\u00f3n",
         "clasificacion": "PG-13",
         "sinopsis": "Paul Atreides se une a los Fremen y busca vengar la muerte de su padre, mientras se enfrenta a una profec\u00eda que lo se\u00f1ala como mes\u00edas.",
         "funciones": [
@@ -69,6 +68,7 @@
         "id": 3,
         "titulo": "Barbie",
         "duracion": "114 min",
+        "genero": "Ciencia Ficci\u00f3n",
         "clasificacion": "PG-13",
         "sinopsis": "Barbie es expulsada de Barbieland por no ser suficientemente perfecta y emprende un viaje al mundo real para descubrir su verdadero significado.",
         "funciones": [
@@ -97,6 +97,7 @@
         "id": 4,
         "titulo": "Toy Story",
         "duracion": "81 min",
+        "genero": "Fantas\u00eda",
         "clasificacion": "G",
         "sinopsis": "Woody, un vaquero de juguete, ve amenazada su posici\u00f3n como l\u00edder cuando llega Buzz Lightyear, un astronauta con tecnolog\u00eda avanzada.",
         "funciones": [
