@@ -33,76 +33,122 @@ Utilizado para manejar el ciclo de vida de las películas en el cine. Una pelíc
 
 ---
 
-## Diagrama UML de Clases (Patrones)
+## Diagrama UML de Clases
 
 ```mermaid
 classDiagram
-    %% Patrón Factory Method
-    class IMetodoPago {
-        <<interface>>
-        +procesar_pago(monto)
+    %% =======================
+    %% VISTAS (GUI)
+    %% =======================
+    namespace Vistas {
+        class VistaLogin {
+            +verificar_credenciales()
+        }
+        class VistaAdmin {
+            +abrir_modal_pelicula()
+            +guardar_cambios()
+            +refrescar_lista()
+        }
+        class VistaCartelera {
+            +cargar_peliculas()
+            +filtrar_por_genero()
+        }
+        class VistaReserva {
+            +actualizar_informacion()
+            +generar_cuadricula_asientos()
+            +iniciar_pago()
+        }
+        class VistaMisReservas {
+            +mostrar_tickets()
+        }
     }
-    class PagoTarjeta {
-        +procesar_pago(monto)
-    }
-    class PagoEfectivo {
-        +procesar_pago(monto)
-    }
-    class FabricaPago {
-        +crear_pago(tipo) IMetodoPago
-    }
-    class ProcesadorPago {
-        -metodo_pago: IMetodoPago
-        +procesar_pago(monto)
-    }
-    IMetodoPago <|.. PagoTarjeta
-    IMetodoPago <|.. PagoEfectivo
-    FabricaPago ..> IMetodoPago : Instancia
-    ProcesadorPago o-- IMetodoPago
 
-    %% Patrón Composite
-    class ComponenteGenero {
-        <<interface>>
-        +nombre: String
-        +contiene(genero) boolean
+    %% =======================
+    %% CONTROLADORES
+    %% =======================
+    namespace Controladores {
+        class ControladorPrincipal {
+            +iniciar()
+            +mostrar_login()
+            +mostrar_cartelera()
+            +mostrar_admin()
+            +cerrar_sesion()
+        }
+        class ControladorReserva {
+            +mostrar_reserva(pelicula)
+            +registrar_reserva(datos)
+            +mostrar_mis_reservas()
+        }
     }
-    class GeneroSimple {
-        +contiene(genero) boolean
-    }
-    class CategoriaGenero {
-        -subgeneros: List
-        +agregar(componente)
-        +eliminar(componente)
-        +contiene(genero) boolean
-    }
-    ComponenteGenero <|.. GeneroSimple
-    ComponenteGenero <|.. CategoriaGenero
-    CategoriaGenero o-- ComponenteGenero
 
-    %% Patrón State
-    class EstadoPelicula {
-        <<interface>>
-        +intentar_reserva() boolean
-        +obtener_mensaje() String
+    %% Conexiones MVC (Controladores inicializan Vistas)
+    ControladorPrincipal "1" *-- "1" VistaLogin : gestiona
+    ControladorPrincipal "1" *-- "1" VistaAdmin : gestiona (Rol Admin)
+    ControladorPrincipal "1" *-- "1" VistaCartelera : gestiona (Rol Cliente)
+    
+    VistaCartelera --> ControladorReserva : solicita reserva
+    ControladorReserva "1" *-- "1" VistaReserva : gestiona
+    ControladorReserva "1" *-- "1" VistaMisReservas : gestiona
+
+    %% =======================
+    %% MODELOS CORE
+    %% =======================
+    namespace Modelos {
+        class Cliente {
+            +username
+            +password
+            +historial_reservas
+        }
+        class Sala {
+            +nombre
+            +capacidad
+            +tipo
+        }
+        class Reserva {
+            +pelicula_titulo
+            +asientos
+            +total
+            +metodo_pago
+        }
     }
-    class EnCartelera {
-        +intentar_reserva() boolean
-        +obtener_mensaje() String
+
+    %% =======================
+    %% PATRONES DE DISEÑO
+    %% =======================
+    namespace Patrones {
+        class Pelicula {
+            +id
+            +titulo
+            +imagen
+            +intentar_reserva()
+        }
+        class EstadoPelicula {
+            <<State>>
+            +intentar_reserva() boolean
+        }
+        class CategoriaGenero {
+            <<Composite>>
+            +agregar(subgenero)
+            +contiene(genero) boolean
+        }
+        class FabricaPago {
+            <<Factory Method>>
+            +crear_pago(tipo) IMetodoPago
+        }
+        class IMetodoPago {
+            <<Interface>>
+            +procesar_pago(monto)
+        }
     }
-    class Proximamente {
-        +intentar_reserva() boolean
-        +obtener_mensaje() String
-    }
-    class Archivada {
-        +intentar_reserva() boolean
-        +obtener_mensaje() String
-    }
-    class Pelicula {
-        -estado: EstadoPelicula
-        +cambiar_estado(estado)
-        +intentar_reserva()
-    }
-    EstadoPelicula <|.. EnCartelera
-    EstadoPelicula <|.. Proximamente
-    EstadoPelicula <|.. Archivada
-    Pelicula o-- EstadoPelicula
+
+    %% Conexiones Lógicas Transversales
+    VistaLogin --> Cliente : valida
+    VistaAdmin --> Pelicula : crea/edita
+    VistaCartelera --> Pelicula : lee y dibuja
+    VistaCartelera --> CategoriaGenero : usa para filtrar
+    VistaReserva --> Sala : consulta capacidad
+    VistaReserva --> FabricaPago : invoca pasarela
+    ControladorReserva --> Reserva : guarda en JSON
+    
+    Pelicula o-- EstadoPelicula : posee
+    FabricaPago ..> IMetodoPago : instancia dinámica
