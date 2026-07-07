@@ -152,6 +152,7 @@ classDiagram
     
     Pelicula o-- EstadoPelicula : posee
     FabricaPago ..> IMetodoPago : instancia dinámica
+```
 
 ## Instalación y Uso
 ###1. Clonar el repositorio
@@ -169,4 +170,4 @@ python main.py
 ```
 ###4. Credenciales de prueba
 *Administrador*: Usuario: admin / Contraseña: admin123
-*Usuario Cliente*: Puedes registrar uno nuevo en la pantalla de Login o usar alguno ya guardado en clientes.json.
+*Usuario Cliente: Puedes registrar uno nuevo en la pantalla de Login o usar alguno ya guardado en clientes.json.
