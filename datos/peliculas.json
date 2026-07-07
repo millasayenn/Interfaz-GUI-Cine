@@ -2,9 +2,10 @@
     {
         "titulo": "Supergirl",
         "duracion": "1h 48m",
-        "genero": "Acción, Superhéroes",
+        "genero": "Acci\u00f3n, Superh\u00e9roes",
         "clasificacion": "TE+7",
-        "sinopsis": "“Supergirl”, la nueva película de DC Studios que aterriza en la pantalla grande, se estrenará en cines de todo el mundo en junio, de la mano de Warner Bros. Pictures. La película está protagonizada por Milly Alcock en el doble papel de Supergirl / Kara Zor-El y dirigida por Craig Gillespie, a partir de un guión de Ana Nogueira. Cuando un enemigo inesperado y despiadado golpea demasiado cerca, Kara Zor-El, también conocida como Supergirl, se ve obligada a unir fuerzas con un acompañante improbable en un épico viaje interestelar de venganza y justicia.",
+        "imagen": "C:/Users/Millaray/Desktop/TPA/Interfaz-GUI-Cine/imagenes/supergirl.jpg",
+        "sinopsis": "\u201cSupergirl\u201d, la nueva pel\u00edcula de DC Studios que aterriza en la pantalla grande, se estrenar\u00e1 en cines de todo el mundo en junio, de la mano de Warner Bros. Pictures. La pel\u00edcula est\u00e1 protagonizada por Milly Alcock en el doble papel de Supergirl / Kara Zor-El y dirigida por Craig Gillespie, a partir de un gui\u00f3n de Ana Nogueira. Cuando un enemigo inesperado y despiadado golpea demasiado cerca, Kara Zor-El, tambi\u00e9n conocida como Supergirl, se ve obligada a unir fuerzas con un acompa\u00f1ante improbable en un \u00e9pico viaje interestelar de venganza y justicia.",
         "estado": "En Cartelera",
         "funciones": [
             {
@@ -14,7 +15,11 @@
                         "hora": "22:30",
                         "idioma": "Subtitulada",
                         "sala": "Sala 1 (2D)",
-                        "asientos_ocupados": []
+                        "asientos_ocupados": [
+                            "A2",
+                            "A1",
+                            "A3"
+                        ]
                     }
                 ]
             }
@@ -22,12 +27,13 @@
         "id": 1
     },
     {
-        "titulo": "Spider-man: Un nuevo día",
+        "titulo": "Spider-man: Un nuevo d\u00eda",
         "duracion": "2h 24m",
-        "genero": "Acción, Superhéroes",
+        "genero": "Acci\u00f3n, Superh\u00e9roes",
         "clasificacion": "TE+7",
-        "sinopsis": "Han pasado cuatro años desde los acontecimientos de No Way Home, y Peter es ahora un adulto que vive completamente solo, habiéndose borrado voluntariamente de las vidas y recuerdos de aquellos a quienes ama. Lucha contra el crimen en un Nueva York que ya no conoce su nombre, se ha dedicado por completo a proteger su ciudad -un Spider-Man de tiempo completo- pero a medida que las exigencias sobre él se intensifican, la presión desata una sorprendente evolución física que amenaza su existencia, aun cuando un nuevo y extraño patrón de crímenes da lugar a una de las amenazas más poderosas que jamás haya enfrentado.",
-        "estado": "Próximamente",
+        "imagen": "C:/Users/Millaray/Desktop/TPA/Interfaz-GUI-Cine/imagenes/spiderman.jpg",
+        "sinopsis": "Han pasado cuatro a\u00f1os desde los acontecimientos de No Way Home, y Peter es ahora un adulto que vive completamente solo, habi\u00e9ndose borrado voluntariamente de las vidas y recuerdos de aquellos a quienes ama. Lucha contra el crimen en un Nueva York que ya no conoce su nombre, se ha dedicado por completo a proteger su ciudad -un Spider-Man de tiempo completo- pero a medida que las exigencias sobre \u00e9l se intensifican, la presi\u00f3n desata una sorprendente evoluci\u00f3n f\u00edsica que amenaza su existencia, aun cuando un nuevo y extra\u00f1o patr\u00f3n de cr\u00edmenes da lugar a una de las amenazas m\u00e1s poderosas que jam\u00e1s haya enfrentado.",
+        "estado": "Pr\u00f3ximamente",
         "funciones": [
             {
                 "fecha": "07-07-2026",
@@ -46,9 +52,10 @@
     {
         "titulo": "Toy Story 5",
         "duracion": "1h 42m",
-        "genero": "Familiar, Animación",
+        "genero": "Familiar, Animaci\u00f3n",
         "clasificacion": "TE",
-        "sinopsis": "Toy Story 5 enfrenta a Buzz, Woody, Jessie y la pandilla a su mayor desafío: la tecnología. Cuando Bonnie se obsesiona con una nueva tablet llamada Lilypad, los juguetes tradicionales son desplazados y deben luchar por recuperar su lugar en el juego.",
+        "imagen": "C:/Users/Millaray/Desktop/TPA/Interfaz-GUI-Cine/imagenes/toystory5.jpg",
+        "sinopsis": "Toy Story 5 enfrenta a Buzz, Woody, Jessie y la pandilla a su mayor desaf\u00edo: la tecnolog\u00eda. Cuando Bonnie se obsesiona con una nueva tablet llamada Lilypad, los juguetes tradicionales son desplazados y deben luchar por recuperar su lugar en el juego.",
         "estado": "En Cartelera",
         "funciones": [
             {
@@ -56,31 +63,51 @@
                 "horarios": [
                     {
                         "hora": "12:00 hrs",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
+                        "idioma": "Doblada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "12:00 hrs",
+                        "idioma": "Subtitulada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
                     },
                     {
                         "hora": "13:40 hrs",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
+                        "idioma": "Doblada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "13:40 hrs",
+                        "idioma": "Subtitulada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
                     },
                     {
                         "hora": "14:30 hrs",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
+                        "idioma": "Doblada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "14:30 hrs",
+                        "idioma": "Subtitulada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
                     },
                     {
                         "hora": "16:10 hrs",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
+                        "idioma": "Doblada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
+                    },
+                    {
+                        "hora": "16:10 hrs",
+                        "idioma": "Subtitulada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
                     }
                 ]
             }

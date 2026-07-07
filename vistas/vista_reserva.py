@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import messagebox
+import os
 from servicios.pagos.fabrica_pago import FabricaPago
 from servicios.pagos.procesador_pago import ProcesadorPago
 
@@ -15,68 +16,125 @@ class VistaReserva(ctk.CTkFrame):
         self.pack_forget()
 
         self.label_titulo = ctk.CTkLabel(self, text="Reserva de Asientos", font=("Arial", 24, "bold"))
-        self.label_titulo.pack(pady=10)
+        self.label_titulo.pack(pady=(15, 5))
 
-        self.info_frame = ctk.CTkFrame(self, fg_color="transparent")
-        self.info_frame.pack(pady=5, padx=20, fill="x")
+        # ==========================================
+        #       LAYOUT PRINCIPAL DE DOS COLUMNAS
+        # ==========================================
+        self.frame_principal = ctk.CTkFrame(self, fg_color="transparent")
+        self.frame_principal.pack(fill="both", expand=True, padx=20, pady=10)
 
-        self.lbl_peli_titulo = ctk.CTkLabel(self.info_frame, text="", font=("Arial", 18, "bold"))
+        # ------------------------------------------
+        # COLUMNA IZQ: PÓSTER E INFORMACIÓN
+        # ------------------------------------------
+        self.frame_izq = ctk.CTkFrame(self.frame_principal, fg_color="transparent", width=250)
+        self.frame_izq.pack(side="left", fill="y", padx=(0, 20))
+
+        # Etiqueta para la imagen
+        self.lbl_imagen = ctk.CTkLabel(self.frame_izq, text="")
+        self.lbl_imagen.pack(pady=(0, 10))
+
+        # Título de la película
+        self.lbl_peli_titulo = ctk.CTkLabel(self.frame_izq, text="", font=("Arial", 20, "bold"), wraplength=250, justify="center")
         self.lbl_peli_titulo.pack(pady=2)
 
-        self.lbl_peli_detalles = ctk.CTkLabel(self.info_frame, text="")
+        # Detalles técnicos (duración, género, clasif)
+        self.lbl_peli_detalles = ctk.CTkLabel(self.frame_izq, text="", font=("Arial", 13), text_color="#2daae1", wraplength=250, justify="center")
         self.lbl_peli_detalles.pack(pady=2)
 
-        self.frame_selectores = ctk.CTkFrame(self, fg_color="transparent")
-        self.frame_selectores.pack(pady=10)
+        # Sinopsis
+        self.lbl_sinopsis = ctk.CTkLabel(self.frame_izq, text="", font=("Arial", 12), text_color="gray", wraplength=250, justify="left")
+        self.lbl_sinopsis.pack(pady=(15, 0), anchor="n", fill="x")
 
-        self.lbl_fecha = ctk.CTkLabel(self.frame_selectores, text="Fecha:")
+
+        # ------------------------------------------
+        # COLUMNA DER: SELECTORES Y ASIENTOS
+        # ------------------------------------------
+        self.frame_der = ctk.CTkFrame(self.frame_principal, fg_color="#1a1a1a", corner_radius=15)
+        self.frame_der.pack(side="right", fill="both", expand=True, ipadx=10, ipady=10)
+
+        self.frame_selectores = ctk.CTkFrame(self.frame_der, fg_color="transparent")
+        self.frame_selectores.pack(pady=15)
+
+        self.lbl_fecha = ctk.CTkLabel(self.frame_selectores, text="Fecha:", font=("Arial", 13, "bold"))
         self.lbl_fecha.grid(row=0, column=0, padx=5)
-        self.cb_fecha = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_fecha)
+        self.cb_fecha = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_fecha, width=130)
         self.cb_fecha.grid(row=0, column=1, padx=5)
         self.cb_fecha.configure(state="disabled")
 
-        self.lbl_hora = ctk.CTkLabel(self.frame_selectores, text="Hora:")
+        self.lbl_hora = ctk.CTkLabel(self.frame_selectores, text="Hora:", font=("Arial", 13, "bold"))
         self.lbl_hora.grid(row=0, column=2, padx=5)
-        self.cb_hora = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_hora)
+        self.cb_hora = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_hora, width=110)
         self.cb_hora.grid(row=0, column=3, padx=5)
         self.cb_hora.configure(state="disabled")
 
-        self.lbl_idioma = ctk.CTkLabel(self.frame_selectores, text="Idioma:")
+        self.lbl_idioma = ctk.CTkLabel(self.frame_selectores, text="Idioma:", font=("Arial", 13, "bold"))
         self.lbl_idioma.grid(row=0, column=4, padx=5)
-        self.cb_idioma = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_idioma)
+        self.cb_idioma = ctk.CTkComboBox(self.frame_selectores, state="readonly", command=self.al_seleccionar_idioma, width=120)
         self.cb_idioma.grid(row=0, column=5, padx=5)
         self.cb_idioma.configure(state="disabled")
 
-        ctk.CTkLabel(self, text="Seleccione sus asientos (Gris: Disponible | Rojo: Ocupado):", font=("Arial", 14)).pack(pady=5)
-        
-        self.asientos_frame = ctk.CTkFrame(self)
-        self.asientos_frame.pack(pady=5, padx=20)
+        # Indicador de sala dinámica
+        self.lbl_info_sala = ctk.CTkLabel(self.frame_der, text="Por favor, seleccione fecha, hora e idioma.", font=("Arial", 14, "italic"), text_color="#d48806")
+        self.lbl_info_sala.pack(pady=5)
+
+        ctk.CTkLabel(self.frame_der, text="Pantalla / Escenario", font=("Arial", 12), text_color="gray", fg_color="#3b3b3b", width=300, corner_radius=5).pack(pady=(15, 5))
+
+        self.asientos_frame = ctk.CTkFrame(self.frame_der, fg_color="transparent")
+        self.asientos_frame.pack(pady=5, padx=20, expand=True)
         self.botones_asientos = {}
 
-        self.frame_botones = ctk.CTkFrame(self, fg_color="transparent")
-        self.frame_botones.pack(pady=15)
+        # Botones de Acción (Pagar / Cancelar)
+        self.frame_botones = ctk.CTkFrame(self.frame_der, fg_color="transparent")
+        self.frame_botones.pack(pady=15, side="bottom")
 
-        self.btn_pagar = ctk.CTkButton(self.frame_botones, text="Proceder al Pago", fg_color="green", hover_color="darkgreen", command=self.iniciar_pago)
-        self.btn_pagar.pack(side="left", padx=10)
-
-        self.btn_volver = ctk.CTkButton(self.frame_botones, text="Cancelar y Volver", fg_color="red", hover_color="darkred", command=self.volver_cartelera)
+        self.btn_volver = ctk.CTkButton(self.frame_botones, text="← Volver a Cartelera", fg_color="red", hover_color="darkred", command=self.volver_cartelera)
         self.btn_volver.pack(side="left", padx=10)
+
+        self.btn_pagar = ctk.CTkButton(self.frame_botones, text="Proceder al Pago →", fg_color="green", hover_color="darkgreen", command=self.iniciar_pago)
+        self.btn_pagar.pack(side="left", padx=10)
 
     def actualizar_informacion(self, pelicula):
         self.pelicula_actual = pelicula 
         self.asientos_seleccionados.clear()
         self.limpiar_cuadricula()
-        self.lbl_peli_detalles.configure(text="")
+        self.lbl_info_sala.configure(text="Por favor, seleccione fecha, hora e idioma.")
 
         if isinstance(pelicula, dict):
             titulo = pelicula.get('titulo', 'Sin título')
+            duracion = pelicula.get('duracion', '-- min')
+            clasificacion = pelicula.get('clasificacion', 'N/A')
+            genero = pelicula.get('genero', 'Desconocido')
+            sinopsis = pelicula.get('sinopsis', 'Sin sinopsis disponible.')
+            ruta_imagen = pelicula.get('imagen', '')
             self.funciones_actuales = pelicula.get('funciones', [])
         else:
             titulo = getattr(pelicula, 'titulo', 'Sin título')
+            duracion = getattr(pelicula, 'duracion', '-- min')
+            clasificacion = getattr(pelicula, 'clasificacion', 'N/A')
+            genero = getattr(pelicula, 'genero', 'Desconocido')
+            sinopsis = getattr(pelicula, 'sinopsis', 'Sin sinopsis disponible.')
+            ruta_imagen = getattr(pelicula, 'imagen', '')
             self.funciones_actuales = getattr(pelicula, 'funciones', [])
 
+        # Actualizar textos de la UI
         self.lbl_peli_titulo.configure(text=titulo)
+        self.lbl_peli_detalles.configure(text=f"⏳ {duracion}  |  🎬 {clasificacion}\n🎭 {genero}")
+        self.lbl_sinopsis.configure(text=sinopsis)
 
+        # Actualizar Imagen
+        if ruta_imagen and os.path.exists(ruta_imagen):
+            try:
+                from PIL import Image
+                img_pil = Image.open(ruta_imagen)
+                img_ctk = ctk.CTkImage(light_image=img_pil, dark_image=img_pil, size=(200, 300))
+                self.lbl_imagen.configure(image=img_ctk, text="", fg_color="transparent")
+            except Exception as e:
+                self.lbl_imagen.configure(image="", text="🎬\nError al cargar póster", font=("Arial", 16), width=200, height=300, fg_color="#2a2a2a", corner_radius=10)
+        else:
+            self.lbl_imagen.configure(image="", text="🎬\nSin Póster", font=("Arial", 18), width=200, height=300, fg_color="#2a2a2a", corner_radius=10)
+
+        # Configurar Fechas
         fechas_disponibles = []
         for funcion in self.funciones_actuales:
             f_fecha = funcion.get('fecha') if isinstance(funcion, dict) else getattr(funcion, 'fecha', '')
@@ -99,6 +157,7 @@ class VistaReserva(ctk.CTkFrame):
 
     def al_seleccionar_fecha(self, fecha_seleccionada):
         self.limpiar_cuadricula() 
+        self.lbl_info_sala.configure(text="Seleccione ahora la hora.")
         self.cb_idioma.configure(values=[""], state="disabled")
         self.cb_idioma.set("")
         horas_disponibles = []
@@ -124,6 +183,7 @@ class VistaReserva(ctk.CTkFrame):
 
     def al_seleccionar_hora(self, hora_seleccionada):
         self.limpiar_cuadricula()
+        self.lbl_info_sala.configure(text="Por último, seleccione el idioma.")
         fecha_seleccionada = self.cb_fecha.get()
         idiomas_disp = []
         
@@ -131,9 +191,9 @@ class VistaReserva(ctk.CTkFrame):
             if funcion.get('fecha') == fecha_seleccionada:
                 for h in funcion.get('horarios', []):
                     if h.get("hora") == hora_seleccionada:
-                        if "idioma" in h: # Formato Nuevo
+                        if "idioma" in h: 
                             idiomas_disp.append(h["idioma"])
-                        elif "idiomas" in h: # Formato Viejo
+                        elif "idiomas" in h: 
                             idiomas_disp.extend(h["idiomas"].keys())
                             
         idiomas_unicos = list(dict.fromkeys(idiomas_disp))
@@ -149,7 +209,7 @@ class VistaReserva(ctk.CTkFrame):
         fecha_seleccionada = self.cb_fecha.get()
         hora_seleccionada = self.cb_hora.get()
         asientos_ocupados = []
-        self.sala_asignada = "Sala 1" # Por defecto
+        self.sala_asignada = "Sala 1" 
 
         for funcion in self.funciones_actuales:
             if funcion.get('fecha') == fecha_seleccionada:
@@ -163,7 +223,7 @@ class VistaReserva(ctk.CTkFrame):
                             asientos_ocupados = h["idiomas"].get(idioma_seleccionado, [])
                             break
                             
-        self.lbl_peli_detalles.configure(text=f"Proyectándose en: {self.sala_asignada}")
+        self.lbl_info_sala.configure(text=f"Proyectándose en: {self.sala_asignada}")
         self.generar_cuadricula_asientos(asientos_ocupados)
 
     def limpiar_cuadricula(self):
@@ -173,26 +233,58 @@ class VistaReserva(ctk.CTkFrame):
         self.botones_asientos.clear()
 
     def generar_cuadricula_asientos(self, asientos_ocupados):
+        import os
+        import json
+        
         self.limpiar_cuadricula()
 
-        for f in range(5):
-            for c in range(6):
+        capacidad = 30  
+        ruta_salas = os.path.join("datos", "salas.json")
+        
+        if os.path.exists(ruta_salas):
+            try:
+                with open(ruta_salas, "r", encoding="utf-8") as f:
+                    salas = json.load(f)
+                    for s in salas:
+                        nombre_completo = f"{s.get('nombre')} ({s.get('tipo')})"
+                        if self.sala_asignada == nombre_completo or self.sala_asignada == s.get('nombre'):
+                            capacidad = int(s.get("capacidad", 30))
+                            break
+            except Exception as e:
+                print(f"Error al leer capacidad de la sala: {e}")
+
+        if capacidad <= 30:
+            columnas = 6
+        elif capacidad <= 50:
+            columnas = 10
+        else:
+            columnas = 12
+
+        filas = (capacidad + columnas - 1) // columnas 
+        asiento_actual = 0
+
+        for f in range(filas):
+            for c in range(columnas):
+                if asiento_actual >= capacidad:
+                    break 
+                
                 num_asiento = f"{chr(65+f)}{c+1}"
                 btn = ctk.CTkButton(self.asientos_frame, text=num_asiento, width=45, height=45)
                 
                 if num_asiento in asientos_ocupados:
-                    btn.configure(fg_color="red", state="disabled")
+                    btn.configure(fg_color="#8b0000", hover_color="#8b0000", state="disabled") # Rojo oscuro para asientos ocupados
                 else:
-                    btn.configure(fg_color="gray", hover_color="lightgray", 
-                                  command=lambda a=num_asiento: self.seleccionar_asiento(a))
+                    btn.configure(fg_color="#3b3b3b", hover_color="lightgray",
+                                command=lambda a=num_asiento: self.seleccionar_asiento(a))
                 
-                btn.grid(row=f, column=c, padx=5, pady=5)
+                btn.grid(row=f, column=c, padx=3, pady=3)
                 self.botones_asientos[num_asiento] = btn
+                asiento_actual += 1
 
     def seleccionar_asiento(self, asiento):
         if asiento in self.asientos_seleccionados:
             self.asientos_seleccionados.remove(asiento)
-            self.botones_asientos[asiento].configure(fg_color="gray")
+            self.botones_asientos[asiento].configure(fg_color="#3b3b3b")
         else:
             self.asientos_seleccionados.append(asiento)
             self.botones_asientos[asiento].configure(fg_color="#1f538d")

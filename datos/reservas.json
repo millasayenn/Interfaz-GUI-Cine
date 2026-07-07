@@ -1,1 +1,20 @@
-[]
+[
+    {
+        "pelicula_titulo": "Supergirl",
+        "sala": "Sala 1 (2D)",
+        "fecha": "08-07-2026",
+        "hora": "22:30",
+        "idioma": "Subtitulada",
+        "asientos": [
+            "A1",
+            "A2",
+            "A3"
+        ],
+        "cant_adultos": 2,
+        "cant_ninos": 1,
+        "metodo_pago": "tarjeta",
+        "total": 13000,
+        "cliente_correo": "milla@gmail.com",
+        "cliente_nombre": "milla"
+    }
+]

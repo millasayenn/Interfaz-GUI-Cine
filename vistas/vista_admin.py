@@ -71,8 +71,8 @@ class VistaAdmin(ctk.CTkFrame):
     def abrir_modal_pelicula(self, pelicula=None):
         modal_peli = ctk.CTkToplevel(self)
         modal_peli.title("Editar Película" if pelicula else "Nueva Película")
-        # Hacemos la ventana más ancha para que quepan las dos columnas
-        modal_peli.geometry("950x650")
+        # Aumentamos el alto a 720 para que el botón entre perfectamente
+        modal_peli.geometry("950x720")
         modal_peli.attributes("-topmost", True)
         modal_peli.grab_set()
 
@@ -134,8 +134,42 @@ class VistaAdmin(ctk.CTkFrame):
         cb_estado.pack(pady=(0,10))
         cb_estado.set(pelicula.get("estado", "En Cartelera") if es_edicion else "En Cartelera")
 
+        # --- SECCIÓN NUEVA: IMAGEN DE LA PELÍCULA ---
+        ctk.CTkLabel(frame_izq, text="Imagen (Ruta):").pack(anchor="w", pady=(5,0))
+        frame_img = ctk.CTkFrame(frame_izq, fg_color="transparent")
+        frame_img.pack(fill="x", pady=(0,10))
+        
+        ent_imagen = ctk.CTkEntry(frame_img, width=250)
+        ent_imagen.pack(side="left", padx=(0, 5))
+        if es_edicion: ent_imagen.insert(0, pelicula.get("imagen", ""))
+        
+        def seleccionar_imagen():
+            from tkinter import filedialog
+            
+            # 1. Quitamos la prioridad de la ventana modal temporalmente
+            modal_peli.attributes("-topmost", False)
+            
+            # 2. Abrimos el explorador y le indicamos que es hijo de la modal
+            ruta = filedialog.askopenfilename(
+                parent=modal_peli,
+                title="Seleccionar Imagen", 
+                filetypes=[("Archivos de imagen", "*.jpg *.jpeg *.png *.webp")]
+            )
+            
+            # 3. Restauramos la prioridad de la ventana modal
+            modal_peli.attributes("-topmost", True)
+            
+            if ruta:
+                ent_imagen.delete(0, "end")
+                ent_imagen.insert(0, ruta)
+                
+        btn_img = ctk.CTkButton(frame_img, text="Buscar", width=95, command=seleccionar_imagen)
+        btn_img.pack(side="left")
+        # --------------------------------------------
+
         ctk.CTkLabel(frame_izq, text="Sinopsis:").pack(anchor="w", pady=(5,0))
-        txt_sinopsis = ctk.CTkTextbox(frame_izq, height=100, width=350)
+        # Ajustamos el alto de la sinopsis a 70 para ahorrar espacio vertical
+        txt_sinopsis = ctk.CTkTextbox(frame_izq, height=70, width=350)
         txt_sinopsis.pack(pady=(0,15))
         if es_edicion: txt_sinopsis.insert("0.0", pelicula.get("sinopsis", ""))
 
@@ -286,6 +320,7 @@ class VistaAdmin(ctk.CTkFrame):
                 "duracion": ent_duracion.get().strip(),
                 "genero": ent_genero.get().strip(),
                 "clasificacion": ent_clasificacion.get().strip(),
+                "imagen": ent_imagen.get().strip(), # SE GUARDA LA RUTA DE LA IMAGEN
                 "sinopsis": txt_sinopsis.get("0.0", "end").strip(),
                 "estado": cb_estado.get(),
                 "funciones": self.funciones_en_edicion 
@@ -308,11 +343,8 @@ class VistaAdmin(ctk.CTkFrame):
             with open(self.ruta_peliculas, "w", encoding="utf-8") as f: 
                 json.dump(peliculas, f, indent=4, ensure_ascii=False)
             
-            # --- ELIMINA O COMENTA ESTA LÍNEA ---
-            # messagebox.showinfo("Éxito", "Película guardada correctamente.")
-            
             self.cargar_lista_peliculas()
-            modal_peli.destroy() # Esto cerrará la ventana automáticamente
+            modal_peli.destroy()
 
         ctk.CTkButton(modal_peli, text="💾 Guardar Película Completa", fg_color="green", hover_color="darkgreen", height=45, font=("Arial", 16, "bold"), command=guardar_cambios).pack(fill="x", padx=20, pady=(0, 20))
 
