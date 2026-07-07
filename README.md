@@ -7,7 +7,7 @@ Este proyecto es una aplicación de escritorio con Interfaz Gráfica de Usuario 
 #### Inicio de Sesión (Login)
 Hay un inicio de sesión que sirve tanto para el administrador como para los clientes, la diferencia es que el administrador inicia sesión con su "nombre de usuario" que es "admin", en cambio los clientes deben ingresar con un correo electrónico
 
-!(https://github.com/millasayenn/Interfaz-GUI-Cine/blob/main/imagenes/fotosreadme/1.%20FotoLogin.png)
+<img src="https://github.com/millasayenn/Interfaz-GUI-Cine/blob/main/imagenes/fotosreadme/1.%20FotoLogin.png" width="400" alt="Login Cine">
 
 
 ### Vista de Administrador
