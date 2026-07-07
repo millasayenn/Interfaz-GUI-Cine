@@ -164,7 +164,7 @@ cd Interfaz-GUI-Cine
 ```python
 pip install customtkinter Pillow
 ```
-### 3. Ejetutar el código
+### 3. Ejecutar el código
 ```python
 python main.py
 ```
