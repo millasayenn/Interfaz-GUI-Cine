@@ -160,6 +160,13 @@ classDiagram
 git clone <url-de-tu-repositorio>
 cd Interfaz-GUI-Cine
 ```
+
+### 2. Si ya tenías el repositorio en el computador, entonces:
+```python
+git pull
+```
+Debes hacerlo dentro de la carpeta donde tengas guardado el proyecto.
+
 ### 2. Instalar las librerías necesarias
 ```python
 pip install customtkinter Pillow
