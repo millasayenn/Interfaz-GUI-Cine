@@ -169,5 +169,5 @@ pip install customtkinter Pillow
 python main.py
 ```
 ### 4. Credenciales de prueba
-*Administrador*: Usuario: admin / Contraseña: admin123
-*Usuario Cliente: Puedes registrar uno nuevo en la pantalla de Login o usar alguno ya guardado en clientes.json.
+* *Administrador*: Usuario: admin / Contraseña: admin123
+* *Usuario Cliente*: Puedes registrar uno nuevo en la pantalla de Login o usar alguno ya guardado en clientes.json.
