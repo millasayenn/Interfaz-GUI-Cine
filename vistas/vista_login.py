@@ -39,55 +39,9 @@ class VistaLogin(ctk.CTkFrame):
         self.btn_registrar = ctk.CTkButton(self.tabview.tab("Registrarse"), text="Crear Cuenta", fg_color="green", hover_color="darkgreen", command=self.intentar_registro)
         self.btn_registrar.pack(pady=20)
 
-    # Método para validar el formato del correo
+    # --- MÉTODOS DE VALIDACIÓN ---
     def validar_correo(self, correo):
-        import re
-        patron = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-        return bool(re.match(patron, correo))
-
-    def intentar_login(self):
-        correo = self.entry_login_correo.get()
-        password = self.entry_login_pass.get()
-        
-        if not correo or not password:
-            messagebox.showwarning("Error", "Complete todos los campos.")
-            return
-            
-        if " " in correo or " " in password:
-            messagebox.showwarning("Error", "El correo y la contraseña no pueden contener espacios en blanco.")
-            return
-            
-        if not self.validar_correo(correo):
-            messagebox.showwarning("Error", "El formato del correo es inválido (ej: usuario@correo.com).")
-            return
-            
-        self.controlador.procesar_login(correo, password)
-
-    def intentar_registro(self):
-        nombre = self.entry_reg_nombre.get().strip() # El nombre sí puede llevar espacios
-        correo = self.entry_reg_correo.get()
-        password = self.entry_reg_pass.get()
-        
-        if not nombre or not correo or not password:
-            messagebox.showwarning("Error", "Complete todos los campos.")
-            return
-            
-        if " " in correo or " " in password:
-            messagebox.showwarning("Error", "El correo y la contraseña no pueden contener espacios en blanco.")
-            return
-            
-        if len(password) < 8:
-            messagebox.showwarning("Error", "La contraseña debe tener un mínimo de 8 caracteres.")
-            return
-            
-        if not self.validar_correo(correo):
-            messagebox.showwarning("Error", "El formato del correo es inválido (ej: usuario@correo.com).")
-            return
-            
-        self.controlador.procesar_registro(nombre, correo, password)
-
-    def validar_correo(self, correo):
-        # El correo debe terminar en gmail.com o outlook.com (y agregamos outlook.es por precaución)
+        # El correo debe terminar en gmail.com, outlook.com o outlook.es
         patron = r'^[\w\.-]+@(gmail\.com|outlook\.com|outlook\.es)$'
         return bool(re.match(patron, correo, re.IGNORECASE))
 
@@ -96,6 +50,7 @@ class VistaLogin(ctk.CTkFrame):
         patron = r'^[A-Za-zÁ-Úá-úñÑ\s]+$'
         return bool(re.match(patron, nombre))
 
+    # --- MÉTODOS DE ACCIÓN ---
     def intentar_login(self):
         correo = self.entry_login_correo.get().strip()
         password = self.entry_login_pass.get()
@@ -107,6 +62,12 @@ class VistaLogin(ctk.CTkFrame):
         if " " in correo or " " in password:
             messagebox.showwarning("Error", "El correo y la contraseña no pueden contener espacios en blanco.")
             return
+            
+        # --- INTERCEPCIÓN PARA EL ADMINISTRADOR ---
+        if correo.lower() == "admin":
+            self.controlador.procesar_login(correo, password)
+            return
+        # ------------------------------------------
             
         if not self.validar_correo(correo):
             messagebox.showwarning("Error", "El correo debe ser de dominio @gmail.com o @outlook.com.")

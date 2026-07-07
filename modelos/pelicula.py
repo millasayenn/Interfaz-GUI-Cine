@@ -1,20 +1,27 @@
+from modelos.estado_pelicula import EstadoPelicula, EnCartelera, Proximamente, Archivada
+
 class Pelicula:
-    """
-    Clase que representa una película disponible en la cartelera.
-    """
-    def __init__(self, titulo: str, duracion_minutos: int, clasificacion: str):
+    def __init__(self, titulo: str, duracion_minutos: str, clasificacion: str, estado_str: str = "En Cartelera"):
         self._titulo = titulo
         self._duracionMinutos = duracion_minutos
         self._clasificacion = clasificacion
+        self._estado = self._mapear_estado(estado_str)
 
-    @property
-    def titulo(self) -> str:
-        return self._titulo
+    def _mapear_estado(self, estado_str: str) -> EstadoPelicula:
+        mapeo = {
+            "Próximamente": Proximamente(),
+            "En Cartelera": EnCartelera(),
+            "Archivada": Archivada()
+        }
+        return mapeo.get(estado_str, EnCartelera())
 
-    @property
-    def duracionMinutos(self) -> int:
-        return self._duracionMinutos
+    def cambiar_estado(self, nuevo_estado: EstadoPelicula):
+        self._estado = nuevo_estado
 
+    def intentar_reserva(self) -> bool:
+        """Delega la validación de la reserva a la clase de Estado correspondiente."""
+        return self._estado.puede_reservar()
+        
     @property
-    def clasificacion(self) -> str:
-        return self._clasificacion
+    def estado_actual(self) -> str:
+        return str(self._estado)

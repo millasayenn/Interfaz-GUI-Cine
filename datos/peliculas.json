@@ -1,89 +1,82 @@
 [
     {
-        "id": 1,
-        "titulo": "Spider-Man: No Way Home",
-        "duracion": "148 min",
-        "genero": "Superheroes",
-        "clasificacion": "PG-13",
-        "sinopsis": "Peter Parker pide ayuda a Doctor Strange para que la gente olvide que es Spider-Man, pero el hechizo sale mal y pone en riesgo el multiverso.",
+        "titulo": "Supergirl",
+        "duracion": "1h 48m",
+        "genero": "Acción, Superhéroes",
+        "clasificacion": "TE+7",
+        "sinopsis": "“Supergirl”, la nueva película de DC Studios que aterriza en la pantalla grande, se estrenará en cines de todo el mundo en junio, de la mano de Warner Bros. Pictures. La película está protagonizada por Milly Alcock en el doble papel de Supergirl / Kara Zor-El y dirigida por Craig Gillespie, a partir de un guión de Ana Nogueira. Cuando un enemigo inesperado y despiadado golpea demasiado cerca, Kara Zor-El, también conocida como Supergirl, se ve obligada a unir fuerzas con un acompañante improbable en un épico viaje interestelar de venganza y justicia.",
+        "estado": "En Cartelera",
         "funciones": [
             {
-                "fecha": "20-06-2026",
+                "fecha": "08-07-2026",
                 "horarios": [
                     {
-                        "hora": "15:00",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
-                    },
-                    {
-                        "hora": "18:30",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
-                    },
-                    {
-                        "hora": "21:00",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
+                        "hora": "22:30",
+                        "idioma": "Subtitulada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
                     }
                 ]
             }
-        ]
+        ],
+        "id": 1
     },
     {
-        "id": 2,
-        "titulo": "Dune: Parte Dos",
-        "duracion": "166 min",
-        "genero": "Acci\u00f3n",
-        "clasificacion": "PG-13",
-        "sinopsis": "Paul Atreides se une a los Fremen y busca vengar la muerte de su padre, mientras se enfrenta a una profec\u00eda que lo se\u00f1ala como mes\u00edas.",
+        "titulo": "Spider-man: Un nuevo día",
+        "duracion": "2h 24m",
+        "genero": "Acción, Superhéroes",
+        "clasificacion": "TE+7",
+        "sinopsis": "Han pasado cuatro años desde los acontecimientos de No Way Home, y Peter es ahora un adulto que vive completamente solo, habiéndose borrado voluntariamente de las vidas y recuerdos de aquellos a quienes ama. Lucha contra el crimen en un Nueva York que ya no conoce su nombre, se ha dedicado por completo a proteger su ciudad -un Spider-Man de tiempo completo- pero a medida que las exigencias sobre él se intensifican, la presión desata una sorprendente evolución física que amenaza su existencia, aun cuando un nuevo y extraño patrón de crímenes da lugar a una de las amenazas más poderosas que jamás haya enfrentado.",
+        "estado": "Próximamente",
         "funciones": [
             {
-                "fecha": "21-06-2026",
+                "fecha": "07-07-2026",
                 "horarios": [
                     {
-                        "hora": "16:00",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
-                    },
-                    {
-                        "hora": "20:00",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
+                        "hora": "22:30",
+                        "idioma": "Doblada",
+                        "sala": "Sala 1 (2D)",
+                        "asientos_ocupados": []
                     }
                 ]
             }
-        ]
+        ],
+        "id": 2
     },
     {
-        "id": 3,
-        "titulo": "Barbie",
-        "duracion": "114 min",
-        "genero": "Ciencia Ficci\u00f3n",
-        "clasificacion": "PG-13",
-        "sinopsis": "Barbie es expulsada de Barbieland por no ser suficientemente perfecta y emprende un viaje al mundo real para descubrir su verdadero significado.",
+        "titulo": "Toy Story 5",
+        "duracion": "1h 42m",
+        "genero": "Familiar, Animación",
+        "clasificacion": "TE",
+        "sinopsis": "Toy Story 5 enfrenta a Buzz, Woody, Jessie y la pandilla a su mayor desafío: la tecnología. Cuando Bonnie se obsesiona con una nueva tablet llamada Lilypad, los juguetes tradicionales son desplazados y deben luchar por recuperar su lugar en el juego.",
+        "estado": "En Cartelera",
         "funciones": [
             {
-                "fecha": "22-06-2026",
+                "fecha": "08-07-2026",
                 "horarios": [
                     {
-                        "hora": "16:00",
+                        "hora": "12:00 hrs",
                         "idiomas": {
                             "Doblada": [],
                             "Subtitulada": []
                         }
                     },
                     {
-                        "hora": "20:00",
+                        "hora": "13:40 hrs",
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
+                    },
+                    {
+                        "hora": "14:30 hrs",
+                        "idiomas": {
+                            "Doblada": [],
+                            "Subtitulada": []
+                        }
+                    },
+                    {
+                        "hora": "16:10 hrs",
                         "idiomas": {
                             "Doblada": [],
                             "Subtitulada": []
@@ -91,35 +84,7 @@
                     }
                 ]
             }
-        ]
-    },
-    {
-        "id": 4,
-        "titulo": "Toy Story",
-        "duracion": "81 min",
-        "genero": "Fantas\u00eda",
-        "clasificacion": "G",
-        "sinopsis": "Woody, un vaquero de juguete, ve amenazada su posici\u00f3n como l\u00edder cuando llega Buzz Lightyear, un astronauta con tecnolog\u00eda avanzada.",
-        "funciones": [
-            {
-                "fecha": "23-06-2026",
-                "horarios": [
-                    {
-                        "hora": "16:00",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
-                    },
-                    {
-                        "hora": "20:00",
-                        "idiomas": {
-                            "Doblada": [],
-                            "Subtitulada": []
-                        }
-                    }
-                ]
-            }
-        ]
+        ],
+        "id": 3
     }
 ]

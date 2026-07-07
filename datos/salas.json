@@ -1,0 +1,44 @@
+[
+    {
+        "nombre": "Sala 1",
+        "capacidad": 50,
+        "tipo": "2D",
+        "id": 1
+    },
+    {
+        "nombre": "Sala 2",
+        "capacidad": 50,
+        "tipo": "2D",
+        "id": 2
+    },
+    {
+        "nombre": "Sala 3",
+        "capacidad": 50,
+        "tipo": "2D",
+        "id": 3
+    },
+    {
+        "nombre": "Sala 4",
+        "capacidad": 50,
+        "tipo": "2D",
+        "id": 4
+    },
+    {
+        "nombre": "Sala 5",
+        "capacidad": 30,
+        "tipo": "3D",
+        "id": 5
+    },
+    {
+        "nombre": "Sala 6",
+        "capacidad": 30,
+        "tipo": "3D",
+        "id": 6
+    },
+    {
+        "nombre": "Sala 7",
+        "capacidad": 30,
+        "tipo": "3D",
+        "id": 7
+    }
+]

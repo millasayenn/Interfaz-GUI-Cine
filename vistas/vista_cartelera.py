@@ -2,6 +2,7 @@ import customtkinter as ctk
 import json
 import os
 from modelos.genero import CategoriaGenero, GeneroSimple
+from modelos.pelicula import Pelicula
 
 class VistaCartelera(ctk.CTkFrame):
     def __init__(self, master, controlador, **kwargs):
@@ -29,10 +30,8 @@ class VistaCartelera(ctk.CTkFrame):
         self.frame_filtros = ctk.CTkFrame(self, fg_color="transparent")
         self.frame_filtros.pack(pady=10, fill="x", padx=20)
 
-        # Construimos la estructura de árbol
         self.construir_arbol_generos()
 
-        # Selector de Género Principal
         self.lbl_genero = ctk.CTkLabel(self.frame_filtros, text="Género:", font=("Arial", 13, "bold"))
         self.lbl_genero.pack(side="left", padx=5)
         
@@ -42,7 +41,6 @@ class VistaCartelera(ctk.CTkFrame):
         self.cb_genero.pack(side="left", padx=5)
         self.cb_genero.set("Todos")
 
-        # Selector de Subgénero
         self.lbl_subgenero = ctk.CTkLabel(self.frame_filtros, text="Subgénero:", font=("Arial", 13, "bold"))
         self.lbl_subgenero.pack(side="left", padx=(20, 5))
 
@@ -55,22 +53,55 @@ class VistaCartelera(ctk.CTkFrame):
         self.contenedor_peliculas.pack(pady=10, padx=20, fill="both", expand=True)
 
     def construir_arbol_generos(self):
-        """Inicializa la estructura Composite jerárquica"""
+        """Inicializa la estructura Composite jerárquica base estática"""
         self.raiz_generos = CategoriaGenero("Todos")
-        
-        # Categoría: Acción y sus componentes hijos
-        accion = CategoriaGenero("Acción")
-        accion.agregar(GeneroSimple("Artes marciales"))
-        accion.agregar(GeneroSimple("Superheroes"))
-        
-        # Categoría: Ficción y sus componentes hijos
-        ficcion = CategoriaGenero("Ficción")
-        ficcion.agregar(GeneroSimple("Ciencia Ficción"))
-        ficcion.agregar(GeneroSimple("Fantasía"))
+        # Ya no necesitamos quemar "Acción" aquí porque la función de abajo 
+        # lo detectará y creará automáticamente desde el JSON.
 
-        # Añadimos las categorías principales a nuestra raíz virtual
-        self.raiz_generos.agregar(accion)
-        self.raiz_generos.agregar(ficcion)
+    def actualizar_filtros_dinamicos(self, peliculas):
+        """Analiza las películas cargadas y añade categorías dinámicas estructuradas"""
+        for p in peliculas:
+            gen_str = p.get('genero', '')
+            if not gen_str:
+                continue
+
+            # Separamos el string por comas
+            partes = [g.strip() for g in gen_str.split(',')]
+            
+            # La primera palabra es la Categoría Padre (Ej: "Familiar" o "Acción")
+            cat_principal = partes[0]
+            # Todo lo que esté después de la coma son Subgéneros (Ej: "Animación" o "Superhéroes")
+            subgeneros = partes[1:] 
+
+            # 1. Buscamos si la Categoría Principal ya existe en nuestro árbol
+            nodo_padre = None
+            for sub in self.raiz_generos.subgeneros:
+                if sub.nombre.lower() == cat_principal.lower():
+                    nodo_padre = sub
+                    break
+
+            # 2. Si no existe, la creamos y la añadimos a la raíz "Todos"
+            if not nodo_padre:
+                nodo_padre = CategoriaGenero(cat_principal)
+                self.raiz_generos.agregar(nodo_padre)
+
+            # 3. Añadimos los subgéneros específicos a su nodo padre
+            if isinstance(nodo_padre, CategoriaGenero):
+                for sub_nombre in subgeneros:
+                    # Verificamos que el subgénero no esté repetido
+                    existe_sub = any(hijo.nombre.lower() == sub_nombre.lower() for hijo in nodo_padre.subgeneros)
+                    if not existe_sub:
+                        nodo_padre.agregar(GeneroSimple(sub_nombre))
+                
+        # Actualizar silenciosamente el menú desplegable principal
+        opciones_principales = ["Todos"] + [sub.nombre for sub in self.raiz_generos.subgeneros]
+        self.cb_genero.configure(values=opciones_principales)
+        
+        # Seguridad: Si el usuario estaba filtrando algo que se borró, regresarlo a "Todos"
+        if self.cb_genero.get() not in opciones_principales:
+            self.cb_genero.set("Todos")
+            self.cb_subgenero.configure(values=["-"], state="disabled")
+            self.cb_subgenero.set("-")
 
     def al_cambiar_genero(self, seleccion):
         """Se ejecuta al cambiar el ComboBox principal. Despliega los subgéneros."""
@@ -78,14 +109,13 @@ class VistaCartelera(ctk.CTkFrame):
             self.cb_subgenero.configure(values=["-"], state="disabled")
             self.cb_subgenero.set("-")
         else:
-            # Buscamos el nodo correspondiente a la selección
             categoria_actual = None
             for sub in self.raiz_generos.subgeneros:
                 if sub.nombre == seleccion:
                     categoria_actual = sub
                     break
             
-            # Si el nodo compuesto tiene hijos (subgéneros), los desplegamos
+            # Solo habilita el menú de subgéneros si la categoría padre realmente tiene hijos
             if categoria_actual and isinstance(categoria_actual, CategoriaGenero) and categoria_actual.subgeneros:
                 opciones_sub = ["Todos (de esta categoría)"] + [hijo.nombre for hijo in categoria_actual.subgeneros]
                 self.cb_subgenero.configure(values=opciones_sub, state="readonly")
@@ -97,7 +127,6 @@ class VistaCartelera(ctk.CTkFrame):
         self.cargar_peliculas()
 
     def al_cambiar_subgenero(self, seleccion):
-        """Refresca la pantalla al cambiar el subgénero específico"""
         self.cargar_peliculas()
 
     def actualizar_bienvenida(self, nombre_usuario):
@@ -121,6 +150,9 @@ class VistaCartelera(ctk.CTkFrame):
                 ctk.CTkLabel(self.contenedor_peliculas, text="La cartelera está vacía en este momento.").pack(pady=20)
                 return
 
+            self.construir_arbol_generos()
+            self.actualizar_filtros_dinamicos(peliculas)
+
             genero_principal = self.cb_genero.get()
             subgenero_elegido = self.cb_subgenero.get()
 
@@ -128,11 +160,9 @@ class VistaCartelera(ctk.CTkFrame):
                 genero_peli = pelicula.get('genero', 'Desconocido')
                 cumple_filtro = False
                 
-                # --- EVALUACIÓN DE FILTRADO COMPOSITE ---
                 if genero_principal == "Todos":
                     cumple_filtro = True
                 else:
-                    # Encontrar el nodo del género padre
                     nodo_padre = None
                     for sub in self.raiz_generos.subgeneros:
                         if sub.nombre == genero_principal:
@@ -140,11 +170,9 @@ class VistaCartelera(ctk.CTkFrame):
                             break
                     
                     if nodo_padre:
-                        # Caso A: Se quiere ver TODO lo relacionado al padre o la película es puramente del padre
                         if subgenero_elegido in ["Todos (de esta categoría)", "-", "No tiene subgéneros"]:
                             cumple_filtro = nodo_padre.contiene(genero_peli)
                         else:
-                            # Caso B: El usuario seleccionó un subgénero hijo específico
                             nodo_hijo = None
                             if isinstance(nodo_padre, CategoriaGenero):
                                 for hijo in nodo_padre.subgeneros:
@@ -157,9 +185,8 @@ class VistaCartelera(ctk.CTkFrame):
                         cumple_filtro = (genero_peli.lower() == genero_principal.lower())
 
                 if not cumple_filtro:
-                    continue # Descarta la película si no cumple las reglas del árbol
+                    continue 
 
-                # --- RENDERIZADO DE TARJETA DE PELÍCULA ---
                 frame_peli = ctk.CTkFrame(self.contenedor_peliculas, corner_radius=10)
                 frame_peli.pack(pady=10, padx=10, fill="x")
 
@@ -174,9 +201,22 @@ class VistaCartelera(ctk.CTkFrame):
                 lbl_sinopsis = ctk.CTkLabel(frame_peli, text=pelicula.get('sinopsis', 'Sin sinopsis disponible.'), wraplength=500, justify="left")
                 lbl_sinopsis.pack(anchor="w", padx=15, pady=5)
 
-                btn_reservar = ctk.CTkButton(frame_peli, text="Ver y Reservar", 
-                                             command=lambda p=pelicula: self.controlador.mostrar_reserva(p))
-                btn_reservar.pack(anchor="e", padx=15, pady=(5, 10))
+                estado_guardado = pelicula.get('estado', 'En Cartelera')
+                peli_modelo = Pelicula(
+                    titulo=titulo,
+                    duracion_minutos=duracion,
+                    clasificacion=clasificacion,
+                    estado_str=estado_guardado
+                )
+
+                if peli_modelo.intentar_reserva():
+                    btn_reservar = ctk.CTkButton(frame_peli, text="Ver y Reservar", 
+                                                command=lambda p=pelicula: self.controlador.mostrar_reserva(p))
+                    btn_reservar.pack(anchor="e", padx=15, pady=(5, 10))
+                else:
+                    lbl_estado_msg = ctk.CTkLabel(frame_peli, text=peli_modelo._estado.obtener_mensaje(), 
+                                                font=("Arial", 13, "italic"), text_color="gray")
+                    lbl_estado_msg.pack(anchor="e", padx=15, pady=(5, 10))
 
         except json.JSONDecodeError:
             ctk.CTkLabel(self.contenedor_peliculas, text="Error: El formato de peliculas.json no es válido.", text_color="red").pack(pady=20)
