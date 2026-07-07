@@ -1,135 +1,108 @@
-# 🎬 Sistema de Reserva de Cine - Proyecto TPA
+# 🎬 Sistema de Gestión y Reserva de Cine (GUI)
 
-Este proyecto es una aplicación de escritorio desarrollada en Python enfocada en la gestión y reserva de asientos para un cine.
+Este proyecto es una aplicación de escritorio con Interfaz Gráfica de Usuario (GUI) desarrollada en Python (usando la librería CustomTkinter), diseñada para simular un sistema completo de un cine. Permite tanto la gestión administrativa de películas y horarios, como la experiencia del cliente para visualizar la cartelera, elegir asientos y simular la compra de entradas.
 
-El diseño del sistema está estructurado utilizando la arquitectura **MVC (Modelo-Vista-Controlador)** y aplica estrictamente los principios **S.O.L.I.D.**, asegurando un código altamente cohesionado, con bajo acoplamiento y fácil de mantener.
+## Características Principales
 
-## Próximas funciones a implementar:
+### Vista de Administrador
+* **Gestión de Películas:** Permite crear, editar y archivar películas, asignando títulos, duración, clasificación y subida de **Pósters/Imágenes** mediante un explorador de archivos.
+* **Programación Dinámica:** Gestor de funciones que permite asignar múltiples fechas, horas e idiomas a cada película.
+* **Control de Salas:** Asignación de salas dinámicas con validación de cruces de horarios para evitar que dos películas se proyecten en el mismo lugar y a la misma hora.
 
-* Estéticas:
-    * Mostrar imágenes de cada película.
-    * En mis reservas mostrar el precio final del adulto y niño y el precio total.
-    * En mis reservas mostrar el idioma y genero de la película.
-    * En mis reservas mostrar la sala en la que se encuentra la película. 
+### Vista de Usuario (Cliente)
+* **Cartelera Interactiva:** Presentación de películas en formato cuadrícula (Grid) separadas automáticamente por su estado (**En Cartelera** y **Próximamente**).
+* **Filtros Inteligentes:** Búsqueda jerárquica de películas mediante categorías principales y subgéneros.
+* **Reserva de Asientos Visual:** Cuadrícula de asientos generada dinámicamente según la capacidad real de la sala asignada (ej. Sala 1 de 50 asientos, Sala VIP de 30). Indicadores visuales para asientos libres (gris) y ocupados (rojo).
+* **Pasarela de Pago:** Simulación de compra con cálculo automático de totales según cantidad de adultos y niños, seleccionando el método de pago (Tarjeta o Efectivo).
+* **Historial de Reservas:** Sección "Mis Reservas" para que el usuario consulte los tickets adquiridos.
 
-* Modificación y eliminación de perfiles de usuario.
-* Vista para el perfil de administrador.
-    * Crear, modificar y eliminar películas.
-    * Crear, modificar y eliminar funciones.
-* Mejorar validaciones:
-    * Insertar módulo 11 para RUT de usuario.
-    * Restricciones para devoluciones de asientos, por ejemplo, no poder devolver un asiento si quedan menos de 24 horas para la función.
+---
 
+## Arquitectura y Patrones de Diseño
 
-## Arquitectura y Diseño (UML)
+El sistema está diseñado bajo principios de Programación Orientada a Objetos (POO) y aplica tres patrones de diseño fundamentales para resolver problemas estructurales y de comportamiento:
 
-Para resolver la instanciación de los métodos de pago sin acoplar el controlador a implementaciones concretas, se implementó el patrón creacional **Factory Method** (`FabricaPago`). Además, se utiliza el patrón **Strategy** para la ejecución de los cobros mediante la interfaz `IMetodoPago`.
+### 1. Patrón *Factory Method* (Creacional)
+Se utilizó para abstraer e instanciar los diferentes **métodos de pago**. La fábrica (`FabricaPago`) decide qué clase instanciar (`PagoTarjeta` o `PagoEfectivo`) basándose en la selección del usuario, permitiendo que en el futuro se agreguen nuevos métodos (ej. PayPal, Transferencia) sin modificar la lógica principal de la pasarela.
 
-A continuación se detalla el diagrama de clases del sistema, que incluye el flujo completo (CRUD) de las reservas:
+### 2. Patrón *Composite* (Estructural)
+Implementado en el sistema de **filtros de cartelera**. Los géneros se tratan como una estructura de árbol, donde existen Categorías Principales (`CategoriaGenero`, el composite) que pueden contener tanto Subgéneros individuales (`GeneroSimple`, las hojas) como otras categorías. Esto permite que la interfaz filtre las películas tratando a subgéneros e hiper-géneros de manera uniforme.
+
+### 3. Patrón *State* (De Comportamiento)
+Utilizado para manejar el ciclo de vida de las películas en el cine. Una película cambia su comportamiento en la GUI dependiendo de si su estado interno es `EnCartelera`, `Proximamente` o `Archivada`. Por ejemplo, el estado *Próximamente* muestra un botón descriptivo, mientras que el estado *En Cartelera* habilita el botón de compra, eliminando largas sentencias condicionales (`if/else`).
+
+---
+
+## Diagrama UML de Clases (Patrones)
+
 ```mermaid
 classDiagram
-    %% --- CLASE PRINCIPAL Y VISTAS (MVC) ---
-    class AppCine {
-        -usuario_actual: Dict
-        +mostrar_login()
-        +mostrar_cartelera()
-        +mostrar_reserva(pelicula: Dict)
-        +mostrar_mis_reservas()
-        +procesar_login(correo: String, password: String)
-        +procesar_registro(nombre: String, correo: String, password: String)
-        +registrar_reserva(datos_reserva: Dict)
-        +devolver_reserva(reserva_a_eliminar: Dict)
-    }
-
-    class VistaMisReservas {
-        +cargar_mis_reservas(reservas: List)
-        +solicitar_devolucion(reserva: Dict)
-    }
-
-    class VistaLogin {
-        +intentar_login()
-        +intentar_registro()
-    }
-
-    class VistaCartelera {
-        +actualizar_bienvenida(nombre: String)
-        +cargar_peliculas()
-    }
-
-    class VistaReserva {
-        -asientos_seleccionados: List
-        +al_seleccionar_fecha()
-        +al_seleccionar_hora()
-        +iniciar_pago()
-        +finalizar_reserva()
-    }
-
-    %% --- SISTEMA DE PAGOS (FACTORY METHOD & STRATEGY) ---
+    %% Patrón Factory Method
     class IMetodoPago {
         <<interface>>
-        +procesar_pago(monto: Float) Boolean
+        +procesar_pago(monto)
     }
-
     class PagoTarjeta {
-        +procesar_pago(monto: Float) Boolean
+        +procesar_pago(monto)
     }
-
     class PagoEfectivo {
-        +procesar_pago(monto: Float) Boolean
+        +procesar_pago(monto)
     }
-
     class FabricaPago {
-        <<Factory Method>>
-        +crear_pago(tipo: String) IMetodoPago
+        +crear_pago(tipo) IMetodoPago
     }
-
     class ProcesadorPago {
         -metodo_pago: IMetodoPago
-        +procesar_pago(monto: Float) Boolean
+        +procesar_pago(monto)
     }
+    IMetodoPago <|.. PagoTarjeta
+    IMetodoPago <|.. PagoEfectivo
+    FabricaPago ..> IMetodoPago : Instancia
+    ProcesadorPago o-- IMetodoPago
 
-    %% --- SISTEMA DE GÉNEROS (PATRÓN COMPOSITE) ---
+    %% Patrón Composite
     class ComponenteGenero {
         <<interface>>
-        +obtener_peliculas() List
-        +obtener_nombre() String
+        +nombre: String
+        +contiene(genero) boolean
     }
-
-    class SubgeneroHoja {
-        -nombre: String
-        -peliculas: List
-        +obtener_peliculas() List
-        +obtener_nombre() String
+    class GeneroSimple {
+        +contiene(genero) boolean
     }
-
-    class GeneroCompuesto {
-        -nombre: String
-        -subgeneros: List~ComponenteGenero~
-        +agregar(g: ComponenteGenero)
-        +obtener_peliculas() List
-        +obtener_nombre() String
+    class CategoriaGenero {
+        -subgeneros: List
+        +agregar(componente)
+        +eliminar(componente)
+        +contiene(genero) boolean
     }
+    ComponenteGenero <|.. GeneroSimple
+    ComponenteGenero <|.. CategoriaGenero
+    CategoriaGenero o-- ComponenteGenero
 
-    %% --- RELACIONES APP Y VISTAS ---
-    AppCine *-- VistaMisReservas : Instancia y controla
-    AppCine *-- VistaLogin : Instancia y controla
-    AppCine *-- VistaCartelera : Instancia y controla
-    AppCine *-- VistaReserva : Instancia y controla
-
-    %% --- CONEXIÓN DE LA VISTA CON EL COMPOSITE ---
-    VistaCartelera --> ComponenteGenero : Usa/Depende
-
-    %% --- RELACIONES DEL PATRÓN COMPOSITE ---
-    ComponenteGenero <|.. SubgeneroHoja : Implementa
-    ComponenteGenero <|.. GeneroCompuesto : Implementa
-    GeneroCompuesto o--> ComponenteGenero : Contiene (Agregación)
-
-    %% --- RELACIONES DEL SISTEMA DE PAGOS ---
-    VistaReserva ..> FabricaPago : Solicita instanciación
-    VistaReserva --> ProcesadorPago : Delega proceso de pago
-
-    FabricaPago ..> IMetodoPago : Crea
-    ProcesadorPago o-- IMetodoPago : Depende de (Composición)
-    
-    IMetodoPago <|.. PagoTarjeta : Implementa
-    IMetodoPago <|.. PagoEfectivo : Implementa
+    %% Patrón State
+    class EstadoPelicula {
+        <<interface>>
+        +intentar_reserva() boolean
+        +obtener_mensaje() String
+    }
+    class EnCartelera {
+        +intentar_reserva() boolean
+        +obtener_mensaje() String
+    }
+    class Proximamente {
+        +intentar_reserva() boolean
+        +obtener_mensaje() String
+    }
+    class Archivada {
+        +intentar_reserva() boolean
+        +obtener_mensaje() String
+    }
+    class Pelicula {
+        -estado: EstadoPelicula
+        +cambiar_estado(estado)
+        +intentar_reserva()
+    }
+    EstadoPelicula <|.. EnCartelera
+    EstadoPelicula <|.. Proximamente
+    EstadoPelicula <|.. Archivada
+    Pelicula o-- EstadoPelicula
