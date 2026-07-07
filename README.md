@@ -11,14 +11,30 @@ Hay un inicio de sesión que sirve tanto para el administrador como para los cli
 
 
 ### Vista de Administrador
-* **Gestión de Películas:** Permite crear, editar y archivar películas, asignando títulos, duración, clasificación y subida de **Pósters/Imágenes** mediante un explorador de archivos.
-* **Programación Dinámica:** Gestor de funciones que permite asignar múltiples fechas, horas e idiomas a cada película.
-* **Control de Salas:** Asignación de salas dinámicas con validación de cruces de horarios para evitar que dos películas se proyecten en el mismo lugar y a la misma hora.
+#### Gestión de Películas:
+* *CRUD Películas:* Permite crear, editar y archivar películas, asignando títulos, duración, clasificación y subida de **Pósters/Imágenes** mediante un explorador de archivos
+* *Gestión de funciones:* Permite gestionar las funciones de dichas películas permitiendo asignar múltiples fechas, horas e idiomas a cada película, contando con una validación que evita que haya cruce de horarios (ej: evita que dos películas diferentes se proyecten en la misma sala y hora).
+
+<img src="https://github.com/millasayenn/Interfaz-GUI-Cine/blob/a6cad3df32c25170626c412806a0fb50656d6343/imagenes/fotosreadme/2.%20FotoPanelAdmin.png" width="400" alt="Panel de Peliculas Admin">
+
+<img src="https://github.com/millasayenn/Interfaz-GUI-Cine/blob/a6cad3df32c25170626c412806a0fb50656d6343/imagenes/fotosreadme/3.%20FotoPanelNuevaPeli.png" width="400" alt="Panel de Creación de Nuevas Películas">
+
+* *CRUD Salas:* Permite crear, editar y eliminar Salas, asignando a cada sala un título, la capacidad de cada sala (asientos) y el tipo de proyección (2D, 3D, IMAX, etc).
+
+<img src="https://github.com/millasayenn/Interfaz-GUI-Cine/blob/a6cad3df32c25170626c412806a0fb50656d6343/imagenes/fotosreadme/5.%20FotoPanelNuevaSala.png" width="400" alt="Panel de Creación de Nuevas Salas">
+
+
 
 ### Vista de Usuario (Cliente)
 * **Cartelera Interactiva:** Presentación de películas en formato cuadrícula (Grid) separadas automáticamente por su estado (**En Cartelera** y **Próximamente**).
+
+<img src="https://github.com/millasayenn/Interfaz-GUI-Cine/blob/a6cad3df32c25170626c412806a0fb50656d6343/imagenes/fotosreadme/6.%20FotoPanelCliente.png" width="400" alt="Panel de Cartelera Interactiva">
+
 * **Filtros Inteligentes:** Búsqueda jerárquica de películas mediante categorías principales y subgéneros.
 * **Reserva de Asientos Visual:** Cuadrícula de asientos generada dinámicamente según la capacidad real de la sala asignada (ej. Sala 1 de 50 asientos, Sala VIP de 30). Indicadores visuales para asientos libres (gris) y ocupados (rojo).
+
+<img src="https://github.com/millasayenn/Interfaz-GUI-Cine/blob/a6cad3df32c25170626c412806a0fb50656d6343/imagenes/fotosreadme/7.%20FotoPanelReservas.png" width="400" alt="Panel de Reserva de Asientos">
+
 * **Pasarela de Pago:** Simulación de compra con cálculo automático de totales según cantidad de adultos y niños, seleccionando el método de pago (Tarjeta o Efectivo).
 * **Historial de Reservas:** Sección "Mis Reservas" para que el usuario consulte los tickets adquiridos.
 
